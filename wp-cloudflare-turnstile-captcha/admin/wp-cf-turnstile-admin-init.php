@@ -26,9 +26,9 @@ class WP_CFT_Admin_Init
     {
         //make sure we are on the appropriate menu page
         if (isset($_GET['page']) && strpos($_GET['page'], WP_CFT_MENU_SLUG_PREFIX ) !== false ) {
-            wp_enqueue_script('postbox');
-            wp_enqueue_script('dashboard');
-            wp_enqueue_script('thickbox');
+            //wp_enqueue_script('postbox');
+            //wp_enqueue_script('dashboard');
+            //wp_enqueue_script('thickbox');
             //wp_enqueue_script('media-upload');
         }
     }
@@ -37,11 +37,11 @@ class WP_CFT_Admin_Init
     {
         //make sure we are on the appropriate menu page
         if (isset($_GET['page']) && strpos($_GET['page'], WP_CFT_MENU_SLUG_PREFIX ) !== false ) {
-            wp_enqueue_style('dashboard');
-            wp_enqueue_style('thickbox');
-            wp_enqueue_style('global');
-            wp_enqueue_style('wp-admin');
-            wp_enqueue_style('aiowpsec-admin-css', WP_CFT_URL. '/css/wp-cf-turnstile-admin-styles.css');
+            //wp_enqueue_style('dashboard');
+            //wp_enqueue_style('thickbox');
+            //wp_enqueue_style('global');
+            //wp_enqueue_style('wp-admin');
+            wp_enqueue_style('wp-cft-admin-css', WP_CFT_URL. '/css/wp-cf-turnstile-admin-styles.css');
         }
     } 
     

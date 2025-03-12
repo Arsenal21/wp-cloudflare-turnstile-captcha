@@ -13,7 +13,8 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
 
     function get_current_tab() 
     {
-        $tab = isset( $_GET['tab'] ) ? $_GET['tab'] : $this->menu_tabs[0];
+        //Get the current tab (if any), otherwise default to the first tab.
+        $tab = isset( $_GET['tab'] ) ? $_GET['tab'] : $this->menu_tabs['tab1'];
         return $tab;
     }
 
@@ -38,36 +39,41 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
      */
     function render_settings_menu_page() 
     {
+        echo '<div class="wrap">';
+
+        //Get the current tab
         $tab = $this->get_current_tab();
-        ?>
-        <div class="wrap">
-        <div id="poststuff"><div id="post-body">
-        <?php 
+
+        //Render the menu tabe before poststuff (for the menu tabs to be correctly rendered withou CSS issue)
         $this->render_menu_tabs();
+
+        //Post stuff and body
+        echo '<div id="poststuff"><div id="post-body">';
+
+        //Switch based on the current tab
         $tab_keys = array_keys($this->menu_tabs);
         switch ($tab)
         {
             case $tab_keys[0]:
                 //include_once('file-to-handle-this-tab-rendering.php');
                 //call_function_to_render_tab1();
-                echo "<br />We are in tab1!";
+                echo "<p>We are in tab1! Just showing that tab1 has been rendered.</p>";
                 $this->postbox("test123", "General Settings Options", "Some test content to show how this function can be used to output postbox");
                 break;
             case $tab_keys[1]:
                 //include_once('file-to-handle-this-tab-rendering.php');
                 //call_function_to_render_tab2();
-                echo "<br />We are in tab2!";
+                echo "<p>We are in tab2! Just showing that tab2 has been rendered.</p>";
                 break;            
             default :
                 //call_default_tab();
-                echo "<br />We are in default tab (which is the first 1)!";
+                echo "<p>We are in default tab (which is the first 1)!</p>";
                 $this->postbox("test123", "General Settings Options Default", "Some test content to show how this function can be used to output postbox");
                 break;
         }
-        ?>
-        </div></div>
-        </div><!-- end or wrap -->
-        <?php
+
+        echo '</div></div>'; //end poststuff and post-body
+        echo '</div>'; //<!-- end or wrap -->
     }
     
 } //end class

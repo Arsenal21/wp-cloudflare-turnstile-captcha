@@ -42,7 +42,7 @@ class WP_CFT_Main{
         define('WP_CFT_PATH', $this->plugin_path());
         define('WP_CFT_DB_VERSION', $this->db_version);
         define('WP_CFT_TEXT_DOMAIN', 'wp-cf-turnstile');
-        define('WP_CFT_MANAGEMENT_PERMISSION', 'add_users');
+        define('WP_CFT_MANAGEMENT_PERMISSION', 'manage_options');
         define('WP_CFT_MENU_SLUG_PREFIX', 'wp-cft');
         define('WP_CFT_MAIN_MENU_SLUG', 'wp-cft');
         define('WP_CFT_SETTINGS_MENU_SLUG', 'wp-cft-settings');
@@ -64,13 +64,13 @@ class WP_CFT_Main{
     function loader_operations(){
         add_action('plugins_loaded',array(&$this, 'plugins_loaded_handler'));//plugins loaded hook
         $this->debug_logger = new WP_CFT_Debug_Logger();
-        if(is_admin()){
-            register_activation_hook( __FILE__, array(&$this, 'activate_handler'));//activation hook
+        if( is_admin() ){
+            //Do admin side operations
             $this->admin_init = new WP_CFT_Admin_Init();
         }
     }
     
-    function activate_handler(){//Only runs when the plugin activates - do installer tasks
+    public static function activate_handler(){//Only runs when the plugin activates - do installer tasks
         //include_once ('file-name-installer.php');
         //wp_cft_run_activation();
     }
