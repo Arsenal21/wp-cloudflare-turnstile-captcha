@@ -12,9 +12,9 @@ class WP_CFT_Admin_Init
     function __construct()
     {
         $this->admin_includes();
-        add_action('admin_print_scripts', array(&$this, 'admin_menu_page_scripts'));
-        add_action('admin_print_styles', array(&$this, 'admin_menu_page_styles'));
-        add_action('admin_menu', array(&$this, 'create_admin_menus'));        
+        add_action('admin_print_scripts', array($this, 'admin_menu_page_scripts'));
+        add_action('admin_print_styles', array($this, 'admin_menu_page_styles'));
+        add_action('admin_menu', array($this, 'create_admin_menus'));        
     }
     
     function admin_includes()
@@ -48,9 +48,9 @@ class WP_CFT_Admin_Init
     function create_admin_menus()
     {
         $menu_icon_url = WP_CFT_URL.'/images/plugin-icon.png';
-        $this->main_menu_page = add_menu_page(__('Cloudflare Turnstile', WP_CFT_TEXT_DOMAIN), __('Cloudflare Turnstile', WP_CFT_TEXT_DOMAIN), WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_MAIN_MENU_SLUG , array(&$this, 'handle_dashboard_menu_rendering'), $menu_icon_url);
-        add_submenu_page(WP_CFT_MAIN_MENU_SLUG, __('Dashboard', WP_CFT_TEXT_DOMAIN),  __('Dashboard', WP_CFT_TEXT_DOMAIN) , WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_MAIN_MENU_SLUG, array(&$this, 'handle_dashboard_menu_rendering'));
-        add_submenu_page(WP_CFT_MAIN_MENU_SLUG, __('Settings', WP_CFT_TEXT_DOMAIN),  __('Settings', WP_CFT_TEXT_DOMAIN) , WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_SETTINGS_MENU_SLUG, array(&$this, 'handle_settings_menu_rendering'));
+        $this->main_menu_page = add_menu_page(__('Cloudflare Turnstile', WP_CFT_TEXT_DOMAIN), __('Cloudflare Turnstile', WP_CFT_TEXT_DOMAIN), WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_MAIN_MENU_SLUG , array($this, 'handle_dashboard_menu_rendering'), $menu_icon_url);
+        add_submenu_page(WP_CFT_MAIN_MENU_SLUG, __('Dashboard', WP_CFT_TEXT_DOMAIN),  __('Dashboard', WP_CFT_TEXT_DOMAIN) , WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_MAIN_MENU_SLUG, array($this, 'handle_dashboard_menu_rendering'));
+        add_submenu_page(WP_CFT_MAIN_MENU_SLUG, __('Settings', WP_CFT_TEXT_DOMAIN),  __('Settings', WP_CFT_TEXT_DOMAIN) , WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_SETTINGS_MENU_SLUG, array($this, 'handle_settings_menu_rendering'));
         
         do_action('wp_cft_admin_menu_created');
     }

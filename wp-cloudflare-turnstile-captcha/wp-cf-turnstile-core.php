@@ -3,8 +3,6 @@
 if (!class_exists('WP_CFT_Main')){
 
 class WP_CFT_Main{
-    var $version = '1.0';
-    var $db_version = '1.0';
     var $plugin_url;
     var $plugin_path;
     var $plugin_configs;//TODO - Does it need to be static?
@@ -15,9 +13,14 @@ class WP_CFT_Main{
         $this->load_configs();
         $this->define_constants();
         $this->includes();
-        $this->loader_operations();
+        $this->initialize_and_run_classes();
 
-        add_action('init', array( &$this, 'wp_cft_plugin_init' ), 0 );
+        // Register action hooks.
+        add_action('plugins_loaded', array($this, 'plugins_loaded_handler'));
+        // Note: Create a separate class to handle the other init time tasks.
+        add_action('init', array( $this, 'load_language' ));
+
+        // Trigger the action hook for when the constructor has finished loading.
         do_action('wp_cft_loaded');
     }
     
@@ -36,33 +39,33 @@ class WP_CFT_Main{
         $this->plugin_configs = WP_CFT_Config::get_instance();
     }
     
-    function define_constants(){
-        define('WP_CFT_VERSION', $this->version);
+    function define_constants(){     
         define('WP_CFT_URL', $this->plugin_url());
         define('WP_CFT_PATH', $this->plugin_path());
-        define('WP_CFT_DB_VERSION', $this->db_version);
         define('WP_CFT_TEXT_DOMAIN', 'wp-cf-turnstile');
         define('WP_CFT_MANAGEMENT_PERMISSION', 'manage_options');
         define('WP_CFT_MENU_SLUG_PREFIX', 'wp-cft');
         define('WP_CFT_MAIN_MENU_SLUG', 'wp-cft');
         define('WP_CFT_SETTINGS_MENU_SLUG', 'wp-cft-settings');
         //global $wpdb;
-        //define('DB_NAME_TABLE_TBL', $wpdb->prefix . "define_name_here_tbl");
+        //define('DB_TABLE_TBL', $wpdb->prefix . "define_name_for_tbl");
 
     }
 
     function includes() {
         //Load common files for everywhere
         include_once('classes/wp-cf-turnstile-debug-logger.php');
-        if (is_admin()){ //Load admin side only files
+        if (is_admin()){ 
+            //Load admin side only files
             include_once('admin/wp-cf-turnstile-admin-init.php');
         }
-        else{ //Load front end side only files
+        else{ 
+            //Load front end side only files
         }
     }
 
-    function loader_operations(){
-        add_action('plugins_loaded',array(&$this, 'plugins_loaded_handler'));//plugins loaded hook
+    function initialize_and_run_classes(){
+        //Initialize and run classes here
         $this->debug_logger = new WP_CFT_Debug_Logger();
         if( is_admin() ){
             //Do admin side operations
@@ -70,35 +73,35 @@ class WP_CFT_Main{
         }
     }
     
-    public static function activate_handler(){//Only runs when the plugin activates - do installer tasks
+    public function load_language() {
+        // Internationalization.
+        // A better practice for text domain is to use dashes instead of underscores.
+        //load_plugin_textdomain('language-text-domain', false, WP_CFT_PATH . '/languages/');
+    }
+
+    public static function activate_handler(){
+        // Only runs when the plugin activates - do installer tasks
         //include_once ('file-name-installer.php');
         //wp_cft_run_activation();
     }
     
+    function plugins_loaded_handler(){
+        // Runs when plugins_loaded action gets fired.
+        // Do any admin side plugins_loaded operations
+        // if(is_admin()){
+        //     $this->do_db_upgrade_check();
+        // }
+    }
+
     function do_db_upgrade_check(){
-        if(is_admin()){//Check if DB needs to be updated
+        if(is_admin()){
+            //Check if DB needs to be updated
             if (get_option('wp_cft_db_version') != WP_CFT_DB_VERSION) {
                 //include_once ('file-name-installer.php');
                 //wp_cft_run_db_upgrade();
             }
         }
-    }
-    
-    function plugins_loaded_handler(){//Runs when plugins_loaded action gets fired
-        if(is_admin()){//Do admin side plugins_loaded operations
-            $this->do_db_upgrade_check();
-            //$this->settings_obj = new WP_CFT_Settings_Page();//Initialize settins menus
-        }
-    }
-    
-    function wp_cft_plugin_init(){//Lets run... Main plugin operation code goes here
-        // Set up localisation
-	// $this->load_plugin_textdomain();
-        // 
-        //Plugin into code goes here... actions, filters, shortcodes goes here
-        //add_action(....);
-        //$this->debug_logger->log_debug("WP Cloudflare Turnstile pluign init");
-    }
+    }    
 
 }//End of class
 

@@ -17,6 +17,10 @@ if(!defined('ABSPATH')){
     exit; 
 }
 
+//Defining the version constants here allows easy updating of them all from one file when releasing new versions.
+define('WP_CFT_VERSION', '1.0.0'); //Plugin version
+//define('WP_CFT_DB_VERSION', '1.0'); //DB version 
+
 //Include the main plugin class
 include_once('wp-cf-turnstile-core.php');
 
