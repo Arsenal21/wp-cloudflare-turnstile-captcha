@@ -34,6 +34,8 @@ class WP_CFT_Main {
 		define( 'WP_CFT_MENU_SLUG_PREFIX', 'wp-cft' );
 		define( 'WP_CFT_MAIN_MENU_SLUG', 'wp-cft' );
 		define( 'WP_CFT_SETTINGS_MENU_SLUG', 'wp-cft-settings' );
+		define( 'WP_CFT_WORDPRESS_FORMS_MENU_SLUG', 'wp-cft-wp-forms' );
+		define( 'WP_CFT_INTEGRATIONS_MENU_SLUG', 'wp-cft-integrations' );
 		//global $wpdb;
 		//define('DB_TABLE_TBL', $wpdb->prefix . "define_name_for_tbl");
 	}
@@ -61,8 +63,9 @@ class WP_CFT_Main {
 
 	public function includes() {
 		//Load common files for everywhere
+		include_once( WP_CFT_PATH . '/classes/wp-cf-turnstile-utils.php' );
 		include_once( WP_CFT_PATH . '/classes/class-wp-cft-turnstile.php' );
-		include_once( WP_CFT_PATH . '/classes/integrations/class-wp-cft-wordpress.php' );
+		include_once( WP_CFT_PATH . '/classes/integrations/class-wp-cft-integration-wp.php' );
 		include_once( WP_CFT_PATH . '/classes/wp-cf-turnstile-debug-logger.php' );
 		if ( is_admin() ) {
 			//Load admin side only files
@@ -98,6 +101,8 @@ class WP_CFT_Main {
 		//include_once ('file-name-installer.php');
 		//wp_cft_run_activation();
 	}
+
+	public static function deactivate_handler() {}
 
 	public function plugins_loaded_handler() {
 		// Runs when plugins_loaded action gets fired.

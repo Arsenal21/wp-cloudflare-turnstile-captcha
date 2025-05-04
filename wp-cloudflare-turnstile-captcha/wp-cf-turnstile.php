@@ -26,12 +26,12 @@ include_once('wp-cf-turnstile-core.php');
 
 //Activation and deactivation hooks
 register_activation_hook(__FILE__,array('WP_CFT_Main','activate_handler'));//activation hook
-//register_deactivation_hook(__FILE__,array('WP_CFT_Main','deactivate_handler'));//deactivation hook
+register_deactivation_hook(__FILE__,array('WP_CFT_Main','deactivate_handler'));//deactivation hook
 
 //Add settings link in plugins listing page
 function wp_cft_add_settings_link( $links, $file ) {
 	if ( $file == plugin_basename( __FILE__ ) ) {
-		$settings_link = '<a href="admin.php?page=wp-cft-settings">Settings</a>';
+		$settings_link = '<a href="admin.php?page=wp-cft">Settings</a>';
 		array_unshift( $links, $settings_link );
 	}
 	return $links;
