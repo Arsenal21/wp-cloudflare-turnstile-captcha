@@ -24,6 +24,7 @@ class WP_CFT_Main {
 		do_action( 'wp_cft_loaded' );
 
 		add_action( 'login_enqueue_scripts', array( $this, 'register_login_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
 	}
 
 	public function define_constants() {
@@ -76,6 +77,10 @@ class WP_CFT_Main {
 	}
 
 	public function register_login_scripts(){
+		WP_CFT_Turnstile::register_scripts();
+	}
+
+	public function register_scripts() {
 		WP_CFT_Turnstile::register_scripts();
 	}
 

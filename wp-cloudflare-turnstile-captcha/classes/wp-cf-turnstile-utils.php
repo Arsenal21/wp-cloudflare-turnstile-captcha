@@ -39,7 +39,7 @@ class WP_CFT_Utils {
 		}
 	}
 
-	public function error_message_by_code( $code ) {
+	public static function error_message_by_code( $code ) {
 		switch ( $code ) {
 			case 'missing-input-secret':
 				return esc_html__( 'The secret parameter was not passed.', 'simple-cloudflare-turnstile' );
@@ -60,4 +60,12 @@ class WP_CFT_Utils {
 		}
 	}
 
+	public static function check_if_plugin_active( $plugin ) {
+		// Include the plugin.php file if it's not already included
+		if (!function_exists('is_plugin_active')) {
+			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+		}
+
+		return is_plugin_active($plugin);
+	}
 }
