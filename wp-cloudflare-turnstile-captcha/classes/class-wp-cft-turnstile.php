@@ -20,34 +20,26 @@ class WP_CFT_Turnstile {
 
 	public static function register_scripts() {
 		wp_register_script( 'cloudflare-turnstile-script', 'https://challenges.cloudflare.com/turnstile/v0/api.js' );
-		wp_register_script( 'wp-cft-script', WP_CFT_URL . '/js/public.js', array( 'cloudflare-turnstile-script' ), wp_rand(), array(
+		wp_register_script( 'wp-cft-script', WP_CFT_URL . '/js/public.js', array( 'cloudflare-turnstile-script' ), WP_CFT_VERSION, array(
 			'strategy'  => 'defer',
 			'in_footer' => true,
 		) );
+
+        // Enqueue public style
+		wp_enqueue_style( 'wp-cf-turnstile-styles', WP_CFT_URL . '/css/wp-cf-turnstile-styles.css', array(), WP_CFT_VERSION );
 	}
 
-	/**
-	 * Create turnstile field template.
-	 */
-	public function render_implicit( $button_id = '', $callback = '', $form_name = '', $unique_id = '', $class = '' ) {
-		wp_enqueue_script( 'wp-cft-script' );
+    public function get_implicit_widget( $callback = '', $form_name = '', $unique_id = '', $class = '' ){
+	    $site_key    = $this->settings->get_value( 'wp_cft_site_key' );
+	    $theme       = $this->settings->get_value( 'wp_cft_theme', 'auto' );
+	    $language    = 'auto';
+	    $appearance  = 'always';
+	    $widget_size = $this->settings->get_value( 'wp_cft_widget_size', 'normal' );
 
-        do_action( "wp_cft_before_cft_widget", esc_attr( $unique_id ) );
-
-		$site_key    = $this->settings->get_value( 'wp_cft_site_key' );
-		$theme       = $this->settings->get_value( 'wp_cft_theme', 'light' );
-		$language    = 'auto';
-		$appearance  = 'always';
-		$widget_size = $this->settings->get_value( 'wp_cft_widget_size', 'normal' );
-
-        $cft_disable_button = false; // TODO: Need to adjust this later.
-        $cft_failure_message_enable = false;
-		?>
-        <div id="cf-turnstile<?php echo esc_attr( $unique_id ); ?>"
+        ob_start();
+	    ?>
+        <div id="cf-turnstile-<?php echo esc_attr( $unique_id ); ?>"
             class="cf-turnstile <?php echo !empty($class) ? esc_attr( $class ) : '' ?>"
-            <?php if ( $cft_disable_button ) { ?>
-            data-callback="<?php echo esc_attr( $callback ); ?>"
-            <?php } ?>
             data-sitekey="<?php echo esc_attr( $site_key ); ?>"
             data-theme="<?php echo esc_attr( $theme ); ?>"
             data-language="<?php echo esc_attr( $language ); ?>"
@@ -55,14 +47,61 @@ class WP_CFT_Turnstile {
             data-retry="auto"
             data-retry-interval="1000"
             data-action="<?php echo esc_attr( $form_name ); ?>"
-            <?php if ( $cft_failure_message_enable ) { ?>
-            data-callback="wp_cft_callback"
-            data-error-callback="wp_cft_error_callback"
-            <?php } ?>
             data-appearance="<?php echo esc_attr( $appearance ); ?>"
+            <?php if ( !empty($callback) ) { ?>
+            data-callback="<?php echo esc_attr( $callback ); ?>"
+            <?php } ?>
+            data-error-callback="wp_cft_error_callback"
+            data-expired-callback="wp_cft_expired_callback"
         ></div>
-		<?php
-		do_action( "wp_cft_after_cft_widget", esc_attr( $unique_id ), $button_id );
+	    <?php
+
+	    return ob_get_clean();
+    }
+
+	/**
+	 * Create turnstile field template.
+	 */
+	public function render_implicit( $callback = '', $form_name = '', $unique_id = '', $class = '' , $widget_id = '') {
+		wp_enqueue_script( 'wp-cft-script' );
+
+        do_action( "wp_cft_before_cft_widget", esc_attr( $unique_id ) );
+
+        echo $this->get_implicit_widget( $callback, $form_name, $unique_id, $class );
+
+		do_action( "wp_cft_after_cft_widget", esc_attr( $unique_id ), $widget_id );
+	}
+
+	public function force_re_render($unique_id = '')
+	{
+		$unique_id = sanitize_text_field($unique_id);
+		$site_key = $this->settings->get_value( 'wp_cft_site_key' );
+
+        $output = '';
+        ob_start();
+		if ($unique_id) {
+			?>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    setTimeout(function () {
+                        const cft_element_id = "cf-turnstile<?php echo esc_html( $unique_id ); ?>";
+                        const cft_element = document.getElementById(cft_element_id);
+
+                        if (cft_element && !cft_element.innerHTML.trim()) {
+                            turnstile.remove("#" + cft_element_id);
+
+                            turnstile.render("#" + cft_element_id, {
+                                sitekey: "<?php echo esc_html( $site_key ); ?>"
+                            });
+                        }
+                    }, 0);
+                });
+            </script>
+			<?php
+		}
+        $output .= ob_get_clean();
+
+        return $output;
 	}
 
 	/**
@@ -71,19 +110,6 @@ class WP_CFT_Turnstile {
 	public function check( $post_data = "" ) {
 
 		$results = array();
-
-		// Check if whitelisted
-        //		if(cfturnstile_whitelisted()) {
-        //			$results['success'] = true;
-        //			return $results;
-        //		}
-
-                // Hook to allow custom skip
-        //		$skip = apply_filters('cfturnstile_widget_disable', false);
-        //		if($skip) {
-        //			$results['success'] = true;
-        //			return $results;
-        //		}
 
 		// Check if POST data is empty
 		if ( empty( $post_data ) && isset( $_POST['cf-turnstile-response'] ) ) {
@@ -111,13 +137,11 @@ class WP_CFT_Turnstile {
 				$results['success'] = false;
 			}
 
-			foreach ( $response as $site_key => $val ) {
-				if ( $site_key == 'error-codes' ) {
-					foreach ( $val as $site_key => $error_val ) {
-						$results['error_code'] = $error_val;
-                        //if ( $error_val == 'invalid-input-secret' ) {
-                        //    update_option( 'cfturnstile_tested', 'no' ); // Disable if invalid secret
-                        //}
+			foreach ( $response as $item_key => $item_value ) {
+				if ( $item_key == 'error-codes' ) {
+					foreach ( $item_value as $error_code ) {
+						$results['error_code'] = $error_code;
+						$results['error_message'] = WP_CFT_Utils::error_message_by_code($error_code);
 					}
 				}
 			}
@@ -125,7 +149,6 @@ class WP_CFT_Turnstile {
 			do_action('wp_cft_after_cft_token_check', $response, $results);
 
 			return $results;
-
 		}
 
 		return false;
