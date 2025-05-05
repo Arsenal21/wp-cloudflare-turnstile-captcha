@@ -8,13 +8,13 @@ class WP_CFT_Config{
         $this->message_stack = new stdClass();
     }
 
-    function load_config(){	
-	    $this->configs = get_option('wp_cft_configs');
-    }
-	
-    function get_value($key){
-    	return isset($this->configs[$key])?$this->configs[$key] : '';    	
-    }
+	function load_config() {
+		$this->configs = get_option( 'wp_cft_configs', array() );
+	}
+
+	function get_value( $key, $default = '' ) {
+		return isset( $this->configs[ $key ] ) ? $this->configs[ $key ] : $default;
+	}
     
     function set_value($key, $value){
     	$this->configs[$key] = $value;
