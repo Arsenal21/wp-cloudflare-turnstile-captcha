@@ -4,7 +4,7 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
 	public $menu_page_slug = WP_CFT_SETTINGS_MENU_SLUG;
 
 	/* Specify all the tabs of this menu in the following array */
-	public $menu_tabs = array( 'tab1' => 'Plugin 1 Settings' );
+	public $menu_tabs = array( 'tab1' => 'Accept Stripe Payments' );
 
 	public function __construct() {
 		$this->render_settings_menu_page();
@@ -52,7 +52,7 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
 		switch ( $tab ) {
 			case $tab_keys[0]:
 			default :
-				$this->postbox( "wp-cft-integration-settings-postbox", "Plugin 1", $this->integration_settings_postbox_content() );
+				$this->postbox( "wp-cft-integration-settings-postbox", "Accept Stripe Payments", $this->asp_integration_settings_postbox_content() );
 				break;
 		}
 
@@ -60,11 +60,39 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
 		echo '</div>'; //<!-- end or wrap -->
 	}
 
-	public function integration_settings_postbox_content() {
+	public function asp_integration_settings_postbox_content() {
+
+		$settings = WP_CFT_Config::get_instance();
+		if ( isset( $_POST['wp_cft_asp_settings_submit'] ) && check_admin_referer( 'wp_cft_asp_settings_nonce' ) ) {
+			$settings->set_value( 'wp_cft_enable_on_asp_checkout', ( isset( $_POST['wp_cft_enable_on_asp_checkout'] ) ? 'checked="checked"' : '' ) );
+
+			$settings->save_config();
+
+			echo '<div class="notice notice-success"><p>' . __( 'Settings saved.', 'wp-cft-turnstile' ) . '</p></div>';
+		}
+
+		$wp_cft_enable_on_asp_checkout = $settings->get_value( 'wp_cft_enable_on_asp_checkout' );
+
 		$output = '';
 		ob_start();
 		?>
-            <p>Integration settings renders here</p>
+        <form action="" method="post">
+            <table class="form-table">
+                <tr>
+                    <th>
+                        <label><?php _e( 'Checkout Form', 'wp-cf-turnstile' ); ?></label>
+                    </th>
+                    <td>
+                        <input type="checkbox"
+                               name="wp_cft_enable_on_asp_checkout" <?php echo esc_attr( $wp_cft_enable_on_asp_checkout ); ?>
+                               value="1">
+                        <p class="description"><?php _e( 'Enable turnstile captcha on the checkout form of stripe payments plugin.', 'wp-cf-turnstile' ); ?></p>
+                    </td>
+                </tr>
+            </table>
+			<?php wp_nonce_field( 'wp_cft_asp_settings_nonce' ) ?>
+			<?php submit_button( __( 'Save Changes' ), 'primary', 'wp_cft_asp_settings_submit' ) ?>
+        </form>
 		<?php
 		$output .= ob_get_clean();
 

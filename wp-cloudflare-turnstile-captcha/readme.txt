@@ -12,3 +12,7 @@ One line description here....
 == Description ==
 
 == Installation ==
+
+= WIP =
+- WordPress forms integration added.
+- Accept stripe payment integration added.
