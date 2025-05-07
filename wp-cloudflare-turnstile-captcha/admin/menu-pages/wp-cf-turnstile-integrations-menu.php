@@ -1,10 +1,10 @@
 <?php
 
 class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
-	public $menu_page_slug = WP_CFT_SETTINGS_MENU_SLUG;
+	public $menu_page_slug = WP_CFT_INTEGRATIONS_MENU_SLUG;
 
 	/* Specify all the tabs of this menu in the following array */
-	public $menu_tabs = array( 'tab1' => 'Accept Stripe Payments' );
+	public $menu_tabs = array( 'tab1' => 'Accept Stripe Payments', 'tab2' => 'Simple Download Monitor' );
 
 	public function __construct() {
 		$this->render_settings_menu_page();
@@ -50,6 +50,9 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
 		//Switch based on the current tab
 		$tab_keys = array_keys( $this->menu_tabs );
 		switch ( $tab ) {
+			case $tab_keys[1]:
+				$this->postbox( "wp-cft-integration-settings-postbox", "Simple Download Monitor", $this->sdm_integration_settings_postbox_content() );
+				break;
 			case $tab_keys[0]:
 			default :
 				$this->postbox( "wp-cft-integration-settings-postbox", "Accept Stripe Payments", $this->asp_integration_settings_postbox_content() );
@@ -92,6 +95,45 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
             </table>
 			<?php wp_nonce_field( 'wp_cft_asp_settings_nonce' ) ?>
 			<?php submit_button( __( 'Save Changes' ), 'primary', 'wp_cft_asp_settings_submit' ) ?>
+        </form>
+		<?php
+		$output .= ob_get_clean();
+
+		return $output;
+	}
+
+
+	public function sdm_integration_settings_postbox_content() {
+		$settings = WP_CFT_Config::get_instance();
+		if ( isset( $_POST['wp_cft_sdm_settings_submit'] ) && check_admin_referer( 'wp_cft_sdm_settings_nonce' ) ) {
+			$settings->set_value( 'wp_cft_enable_on_sdm_download', ( isset( $_POST['wp_cft_enable_on_sdm_download'] ) ? 'checked="checked"' : '' ) );
+
+			$settings->save_config();
+
+			echo '<div class="notice notice-success"><p>' . __( 'Settings saved.', 'wp-cft-turnstile' ) . '</p></div>';
+		}
+
+		$wp_cft_enable_on_sdm_download = $settings->get_value( 'wp_cft_enable_on_sdm_download' );
+
+		$output = '';
+		ob_start();
+		?>
+        <form action="" method="post">
+            <table class="form-table">
+                <tr>
+                    <th>
+                        <label><?php _e( 'Download Form', 'wp-cf-turnstile' ); ?></label>
+                    </th>
+                    <td>
+                        <input type="checkbox"
+                               name="wp_cft_enable_on_sdm_download" <?php echo esc_attr( $wp_cft_enable_on_sdm_download ); ?>
+                               value="1">
+                        <p class="description"><?php _e( 'Enable turnstile captcha on the download forms of simple download monitor plugin.', 'wp-cf-turnstile' ); ?></p>
+                    </td>
+                </tr>
+            </table>
+			<?php wp_nonce_field( 'wp_cft_sdm_settings_nonce' ) ?>
+			<?php submit_button( __( 'Save Changes' ), 'primary', 'wp_cft_sdm_settings_submit' ) ?>
         </form>
 		<?php
 		$output .= ob_get_clean();

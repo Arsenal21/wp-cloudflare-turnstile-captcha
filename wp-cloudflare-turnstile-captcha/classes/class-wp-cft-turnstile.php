@@ -18,15 +18,27 @@ class WP_CFT_Turnstile {
 		$this->settings = WP_CFT_Config::get_instance();
 	}
 
+    public static function get_cft_cdn_url() {
+	    return 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    }
+
+    public static function get_wp_cft_script_url() {
+	    return WP_CFT_URL . '/js/public.js';
+    }
+
+    public static function get_wp_cft_style_url() {
+        return WP_CFT_URL . '/css/wp-cf-turnstile-styles.css';
+    }
+
 	public static function register_scripts() {
-		wp_register_script( 'cloudflare-turnstile-script', 'https://challenges.cloudflare.com/turnstile/v0/api.js' );
-		wp_register_script( 'wp-cft-script', WP_CFT_URL . '/js/public.js', array( 'cloudflare-turnstile-script' ), WP_CFT_VERSION, array(
+		wp_register_script( 'cloudflare-turnstile-script', self::get_cft_cdn_url() );
+		wp_register_script( 'wp-cft-script', self::get_wp_cft_script_url() , array( 'cloudflare-turnstile-script' ), WP_CFT_VERSION, array(
 			'strategy'  => 'defer',
 			'in_footer' => true,
 		) );
 
         // Public style
-		wp_register_style( 'wp-cf-turnstile-styles', WP_CFT_URL . '/css/wp-cf-turnstile-styles.css', array(), WP_CFT_VERSION );
+		wp_register_style( 'wp-cf-turnstile-styles', self::get_wp_cft_style_url() , array(), WP_CFT_VERSION );
 	}
 
     public function get_implicit_widget( $callback = '', $form_name = '', $unique_id = '', $class = '' ){
