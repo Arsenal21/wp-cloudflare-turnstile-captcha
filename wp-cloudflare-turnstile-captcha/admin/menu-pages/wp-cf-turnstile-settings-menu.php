@@ -118,8 +118,8 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
 		$settings = WP_CFT_Config::get_instance();
 		if ( isset( $_POST['wp_cft_display_settings_submit'] ) && check_admin_referer( 'wp_cft_display_settings_nonce' ) ) {
 			$settings->set_value( 'wp_cft_theme', sanitize_text_field( $_POST['wp_cft_theme'] ) );
-			$settings->set_value( 'wp_cft_custom_error_msg', sanitize_text_field( $_POST['wp_cft_custom_error_msg'] ) );
 			$settings->set_value( 'wp_cft_widget_size', sanitize_text_field( $_POST['wp_cft_widget_size'] ) );
+			$settings->set_value( 'wp_cft_custom_error_msg', sanitize_text_field( $_POST['wp_cft_custom_error_msg'] ) );
 
 			$settings->save_config();
 

@@ -5,3 +5,12 @@
 .wp-cft-widget-mb-12{
     margin-bottom: 12px;
 }
+
+.wp-cft-place-widget-center{
+    display: flex;
+    justify-content: center;
+}
+
+.wp-cft-error-msg {
+    color: #cc0000;
+}

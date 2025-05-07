@@ -106,7 +106,7 @@ class WP_CFT_WordPress_Integration {
 		$result = $this->turnstile->check();
 
 		$success = isset( $result['success'] ) ? boolval( $result['success'] ) : false;
-		$error_message = isset( $result['error_message'] ) ? boolval( $result['error_message'] ) : '';
+		$error_message = isset( $result['error_message'] ) ? $result['error_message'] : '';
 
 		if ( $success != true ) {
 			 $user = new WP_Error( 'wpf_cf_turnstile_error', WP_CFT_Utils::failed_message($error_message) );
@@ -143,7 +143,7 @@ class WP_CFT_WordPress_Integration {
 		$result = $this->turnstile->check();
 
 		$success = isset( $result['success'] ) ? boolval( $result['success'] ) : false;
-		$error_message = isset( $result['error_message'] ) ? boolval( $result['error_message'] ) : '';
+		$error_message = isset( $result['error_message'] ) ? $result['error_message'] : '';
 
 		if ( ! $success ) {
 			$errors->add( 'wpf_cf_turnstile_error', WP_CFT_Utils::failed_message($error_message) );
@@ -163,7 +163,7 @@ class WP_CFT_WordPress_Integration {
 			$result = $this->turnstile->check();
 
 			$success = isset( $result['success'] ) ? boolval( $result['success'] ) : false;
-			$error_message = isset( $result['error_message'] ) ? boolval( $result['error_message'] ) : '';
+			$error_message = isset( $result['error_message'] ) ? $result['error_message'] : '';
 
 			if ( ! $success ) {
 				$validation_errors->add( 'wpf_cf_turnstile_error', WP_CFT_Utils::failed_message($error_message) );
@@ -180,7 +180,7 @@ class WP_CFT_WordPress_Integration {
 			$result = WP_CFT_Turnstile::get_instance()->check();
 
 			$success = isset( $result['success'] ) ? boolval( $result['success'] ) : false;
-			$error_message = isset( $result['error_message'] ) ? boolval( $result['error_message'] ) : '';
+			$error_message = isset( $result['error_message'] ) ? $result['error_message'] : '';
 
 			if ( ! $success ) {
 				wp_die(

@@ -25,8 +25,8 @@ class WP_CFT_Turnstile {
 			'in_footer' => true,
 		) );
 
-        // Enqueue public style
-		wp_enqueue_style( 'wp-cf-turnstile-styles', WP_CFT_URL . '/css/wp-cf-turnstile-styles.css', array(), WP_CFT_VERSION );
+        // Public style
+		wp_register_style( 'wp-cf-turnstile-styles', WP_CFT_URL . '/css/wp-cf-turnstile-styles.css', array(), WP_CFT_VERSION );
 	}
 
     public function get_implicit_widget( $callback = '', $form_name = '', $unique_id = '', $class = '' ){
@@ -39,7 +39,7 @@ class WP_CFT_Turnstile {
         ob_start();
 	    ?>
         <div id="cf-turnstile-<?php echo esc_attr( $unique_id ); ?>"
-            class="cf-turnstile <?php echo !empty($class) ? esc_attr( $class ) : '' ?>"
+            class="cf-turnstile wp-cf-turnstile-div <?php echo !empty($class) ? esc_attr( $class ) : '' ?>"
             data-sitekey="<?php echo esc_attr( $site_key ); ?>"
             data-theme="<?php echo esc_attr( $theme ); ?>"
             data-language="<?php echo esc_attr( $language ); ?>"
@@ -64,6 +64,7 @@ class WP_CFT_Turnstile {
 	 */
 	public function render_implicit( $callback = '', $form_name = '', $unique_id = '', $class = '' , $widget_id = '') {
 		wp_enqueue_script( 'wp-cft-script' );
+		wp_enqueue_style( 'wp-cf-turnstile-styles' );
 
         do_action( "wp_cft_before_cft_widget", esc_attr( $unique_id ) );
 
@@ -107,13 +108,12 @@ class WP_CFT_Turnstile {
 	/**
 	 * Checks Turnstile Captcha POST is Valid
 	 */
-	public function check( $post_data = "" ) {
-
+	public function check( $cft_response_token = "" ) {
 		$results = array();
 
 		// Check if POST data is empty
-		if ( empty( $post_data ) && isset( $_POST['cf-turnstile-response'] ) ) {
-			$post_data = sanitize_text_field( $_POST['cf-turnstile-response'] );
+		if ( empty( $cft_response_token ) && isset( $_POST['cf-turnstile-response'] ) ) {
+			$cft_response_token = sanitize_text_field( $_POST['cf-turnstile-response'] );
 		}
 
 		// Get Turnstile Keys from Settings
@@ -124,7 +124,7 @@ class WP_CFT_Turnstile {
 			$headers  = array(
 				'body' => [
 					'secret'   => $secret_key,
-					'response' => $post_data
+					'response' => $cft_response_token
 				]
 			);
 			$verify   = wp_remote_post( 'https://challenges.cloudflare.com/turnstile/v0/siteverify', $headers );
