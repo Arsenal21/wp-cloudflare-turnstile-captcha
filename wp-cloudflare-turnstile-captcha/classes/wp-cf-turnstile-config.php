@@ -13,7 +13,12 @@ class WP_CFT_Config{
 	}
 
 	function get_value( $key, $default = '' ) {
-		return isset( $this->configs[ $key ] ) ? $this->configs[ $key ] : $default;
+		$value = isset( $this->configs[ $key ] ) ? $this->configs[ $key ] : '';
+		if ($value === '' && $default !== ''){
+			$value = $default;
+		}
+
+		return $value;
 	}
     
     function set_value($key, $value){

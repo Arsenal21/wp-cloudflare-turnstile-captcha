@@ -1,7 +1,7 @@
 <?php
 
 class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
-	public $menu_page_slug = WP_CFT_SETTINGS_MENU_SLUG;
+	public $menu_page_slug = WP_CFT_MAIN_MENU_SLUG;
 
 	/* Specify all the tabs of this menu in the following array */
 	public $menu_tabs = array( 'tab1' => 'General Settings' );

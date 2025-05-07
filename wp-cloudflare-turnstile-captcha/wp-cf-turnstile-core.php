@@ -68,6 +68,7 @@ class WP_CFT_Main {
 		include_once( WP_CFT_PATH . '/classes/class-wp-cft-turnstile.php' );
 		include_once( WP_CFT_PATH . '/classes/integrations/class-wp-cft-integration-wp.php' );
 		include_once( WP_CFT_PATH . '/classes/integrations/class-wp-cft-integration-asp.php' );
+		include_once( WP_CFT_PATH . '/classes/integrations/class-wp-cft-integration-sdm.php' );
 		include_once( WP_CFT_PATH . '/classes/wp-cf-turnstile-debug-logger.php' );
 		if ( is_admin() ) {
 			//Load admin side only files
@@ -95,6 +96,7 @@ class WP_CFT_Main {
 
 		new WP_CFT_WordPress_Integration();
 		new WP_CFT_ASP_Integration();
+		new WP_CFT_SDM_Integration();
 	}
 
 	public function load_language() {

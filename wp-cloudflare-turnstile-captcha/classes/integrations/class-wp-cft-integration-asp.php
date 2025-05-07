@@ -14,9 +14,10 @@ class WP_CFT_ASP_Integration {
 		$wp_cft_enable_on_asp_checkout = $this->settings->get_value( 'wp_cft_enable_on_asp_checkout' );
 		if ( $wp_cft_enable_on_asp_checkout ) {
 			add_filter( 'asp_ng_pp_data_ready', array( $this, 'asp_ng_pp_data_ready' ), 10, 2 );
-			add_action( 'asp_ng_pp_output_before_closing_head', array( $this, 'print_cft_scripts' ) );
-			add_action( 'asp_ng_pp_output_before_closing_form', array( $this, 'render_asp_checkout_form_cft' ) );
-			add_action( 'asp_ng_before_api_pre_submission_validation', array( $this, 'check_asp_checkout' ) ); // Here use the lower priority to get the WP_User object properly.
+			add_action( 'asp_ng_pp_output_add_styles', array( $this, 'add_cft_styles' ) );
+			add_action( 'asp_ng_pp_output_add_scripts', array( $this, 'add_cft_scripts' ) );
+			add_filter( 'asp_ng_pp_output_before_buttons', array( $this, 'render_asp_checkout_form_cft' ), 10, 2 );
+			add_action( 'asp_ng_before_api_pre_submission_validation', array( $this, 'check_asp_checkout' ) );
 		}
 	}
 
@@ -30,17 +31,32 @@ class WP_CFT_ASP_Integration {
 		return $data;
 	}
 
-	public function print_cft_scripts(){
-		WP_CFT_Turnstile::register_scripts();
-
-		wp_print_scripts('wp-cft-script');
-		wp_print_styles('wp-cf-turnstile-styles');
+	public function add_cft_styles( $styles ) {
+		$styles[] = array(
+			'footer' => true,
+			'src'    => WP_CFT_Turnstile::get_wp_cft_style_url() .'?ver=' . WP_CFT_VERSION,
+		);
+		return $styles;
 	}
 
-	public function render_asp_checkout_form_cft() {
+	public function add_cft_scripts( $scripts ) {
+		$scripts[] = array(
+			'footer' => true,
+			'src'    => WP_CFT_Turnstile::get_cft_cdn_url(),
+		);
+		$scripts[] = array(
+			'footer' => true,
+			'src'    => WP_CFT_Turnstile::get_wp_cft_script_url() .'?ver=' . WP_CFT_VERSION,
+		);
+		return $scripts;
+	}
+
+	public function render_asp_checkout_form_cft($out, $data) {
 		echo '<div class="wp-cft-place-widget-center">';
 		echo $this->turnstile->get_implicit_widget( 'wp_cft_asp_checkout_form_callback', 'asp-checkout', wp_rand() );
 		echo '</div>';
+
+		return $out;
 	}
 
 	public function check_asp_checkout( ) {
@@ -53,7 +69,7 @@ class WP_CFT_ASP_Integration {
 		$error_message = isset( $result['error_message'] ) ? $result['error_message'] : '';
 
 		// Send error response if failed.
-		if ( $success != true ) {
+		if ( empty($success) ) {
 			$out            = array();
 			$out['success'] = false;
 

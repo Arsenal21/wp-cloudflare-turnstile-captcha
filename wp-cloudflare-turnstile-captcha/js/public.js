@@ -121,7 +121,7 @@ function wp_cft_error_msg_by_code(code = 0){
  * This callback invoked upon success of the challenge. This is specific to ASP plugin.
  */
 function wp_cft_asp_checkout_form_callback(token){
-    console.log('[WP CFT]: Cloudflare turnstile challenge successful for ASP checkout.');
+    console.log('[WP CFT] Cloudflare turnstile challenge successful for ASP checkout.');
 
     // Here, the 'vars' object is available by the ASP plugin.
     if (vars.data){
