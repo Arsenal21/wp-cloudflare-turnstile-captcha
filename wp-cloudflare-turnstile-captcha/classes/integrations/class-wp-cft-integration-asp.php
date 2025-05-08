@@ -48,6 +48,10 @@ class WP_CFT_ASP_Integration {
 			'footer' => true,
 			'src'    => WP_CFT_Turnstile::get_wp_cft_script_url() .'?ver=' . WP_CFT_VERSION,
 		);
+		$scripts[] = array(
+			'footer' => true,
+			'src'    => WP_CFT_URL . '/js/wp-cft-script-asp.js' .'?ver=' . WP_CFT_VERSION,
+		);
 		return $scripts;
 	}
 
