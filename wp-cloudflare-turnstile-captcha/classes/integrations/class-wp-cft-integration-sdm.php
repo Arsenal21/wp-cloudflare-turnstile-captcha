@@ -19,9 +19,54 @@ class WP_CFT_SDM_Integration {
 	}
 
 	public function render_sdm_download_form_cft($output, $id, $args ) {
+		wp_enqueue_script( 'wp-cft-script-sdm', WP_CFT_URL . '/js/wp-cft-script-sdm.js' , array( 'wp-cft-script' ), WP_CFT_VERSION, array(
+			'strategy'  => 'defer',
+			'in_footer' => true,
+		) );
+
+		$cft_unique_id = 'sdm' . wp_rand();
+
+        $dl_specific_cft_class_name = "wp-cft-sdm-dl-" . $id; // This unique class will be used in js to detect desired cft response field.
+
+        $dl_specific_cft_callback_name = "wp_cft_sdm_callback" . $cft_unique_id;
+
+		$output = '';
 		ob_start();
-		$this->turnstile->render_implicit('wp_cft_callback', 'sdm-download-'. $id, wp_rand(), '' );
+		?>
+		<script>
+            // Create a callback function with unique function name, so it is specific to sdm download item widget.
+            window['<?php echo esc_js($dl_specific_cft_callback_name)?>'] = function (token){
+                console.log('[WP CFT] Cloudflare turnstile challenge successful.');
+
+                const cft_cont_id = 'cf-turnstile-' + '<?php echo esc_js($cft_unique_id) ?>';
+                const cft_cont = document.getElementById(cft_cont_id);
+
+                // Get the download form (if there is any).
+                const dl_form = wp_cft_get_dl_form(cft_cont);
+                if(dl_form){
+                    // Append cft token as am input field, so that it can be captured after form submission.
+
+                    // First check if the token input field already exists or not.
+                    const existing_cft_token_field = dl_form.querySelector('form[name="cf-turnstile-response"]');
+                    if (existing_cft_token_field){
+                        // Input field already exists, update token value.
+                        existing_cft_token_field.value = token;
+                    } else {
+                        const cft_token_field = document.createElement('input');
+                        cft_token_field.type = 'hidden';
+                        cft_token_field.name = 'cf-turnstile-response';
+                        cft_token_field.value = token;
+
+                        dl_form.appendChild(cft_token_field);
+                    }
+                } else {
+                    // Download form not found, It could be a download link button without a form wrap. Do nothing.
+                }
+            }
+		</script>
+		<?php
 		$output .= ob_get_clean();
+		$output .= $this->turnstile->get_implicit_widget($dl_specific_cft_callback_name, 'sdm-download-'. $id, $cft_unique_id, $dl_specific_cft_class_name );
 		return $output;
 	}
 

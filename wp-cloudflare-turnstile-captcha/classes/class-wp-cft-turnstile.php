@@ -23,7 +23,7 @@ class WP_CFT_Turnstile {
     }
 
     public static function get_wp_cft_script_url() {
-	    return WP_CFT_URL . '/js/public.js';
+	    return WP_CFT_URL . '/js/wp-cft-script.js';
     }
 
     public static function get_wp_cft_style_url() {
@@ -124,8 +124,8 @@ class WP_CFT_Turnstile {
 		$results = array();
 
 		// Check if POST data is empty
-		if ( empty( $cft_response_token ) && isset( $_POST['cf-turnstile-response'] ) ) {
-			$cft_response_token = sanitize_text_field( $_POST['cf-turnstile-response'] );
+		if ( empty( $cft_response_token ) && isset( $_REQUEST['cf-turnstile-response'] ) ) {
+			$cft_response_token = sanitize_text_field( $_REQUEST['cf-turnstile-response'] );
 		}
 
 		// Get Turnstile Keys from Settings
