@@ -107,6 +107,7 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
 		$settings = WP_CFT_Config::get_instance();
 		if ( isset( $_POST['wp_cft_sdm_settings_submit'] ) && check_admin_referer( 'wp_cft_sdm_settings_nonce' ) ) {
 			$settings->set_value( 'wp_cft_enable_on_sdm_download', ( isset( $_POST['wp_cft_enable_on_sdm_download'] ) ? 'checked="checked"' : '' ) );
+			$settings->set_value( 'wp_cft_enable_on_sdm_sf', ( isset( $_POST['wp_cft_enable_on_sdm_sf'] ) ? 'checked="checked"' : '' ) );
 
 			$settings->save_config();
 
@@ -114,6 +115,7 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
 		}
 
 		$wp_cft_enable_on_sdm_download = $settings->get_value( 'wp_cft_enable_on_sdm_download' );
+		$wp_cft_enable_on_sdm_sf = $settings->get_value( 'wp_cft_enable_on_sdm_sf' );
 
 		$output = '';
 		ob_start();
@@ -128,7 +130,19 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
                         <input type="checkbox"
                                name="wp_cft_enable_on_sdm_download" <?php echo esc_attr( $wp_cft_enable_on_sdm_download ); ?>
                                value="1">
-                        <p class="description"><?php _e( 'Enable turnstile captcha on the download forms of simple download monitor plugin.', 'wp-cf-turnstile' ); ?></p>
+                        <p class="description"><?php _e( 'Enable turnstile captcha on the download forms of simple download monitor core plugin.', 'wp-cf-turnstile' ); ?></p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        <label><?php _e( 'Squeeze Form', 'wp-cf-turnstile' ); ?></label>
+                    </th>
+                    <td>
+                        <input type="checkbox"
+                               name="wp_cft_enable_on_sdm_sf" <?php echo esc_attr( $wp_cft_enable_on_sdm_sf ); ?>
+                               value="1">
+                        <p class="description"><?php _e( 'Enable turnstile captcha on the download forms of squeeze form addon.', 'wp-cf-turnstile' ); ?></p>
                     </td>
                 </tr>
             </table>

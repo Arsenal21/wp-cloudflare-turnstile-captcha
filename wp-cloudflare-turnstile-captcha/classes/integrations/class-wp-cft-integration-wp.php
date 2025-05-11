@@ -103,7 +103,7 @@ class WP_CFT_WordPress_Integration {
 		}
 
 		// Check Turnstile
-		$result = $this->turnstile->check();
+		$result = $this->turnstile->check_cft_token_response();
 
 		$success = isset( $result['success'] ) ? boolval( $result['success'] ) : false;
 		$error_message = isset( $result['error_message'] ) ? $result['error_message'] : '';
@@ -140,7 +140,7 @@ class WP_CFT_WordPress_Integration {
 			return $errors;
 		}
 
-		$result = $this->turnstile->check();
+		$result = $this->turnstile->check_cft_token_response();
 
 		$success = isset( $result['success'] ) ? boolval( $result['success'] ) : false;
 		$error_message = isset( $result['error_message'] ) ? $result['error_message'] : '';
@@ -160,7 +160,7 @@ class WP_CFT_WordPress_Integration {
 
 		// Check if password reset page.
 		if ( WP_CFT_Utils::is_reset_password_page() ) {
-			$result = $this->turnstile->check();
+			$result = $this->turnstile->check_cft_token_response();
 
 			$success = isset( $result['success'] ) ? boolval( $result['success'] ) : false;
 			$error_message = isset( $result['error_message'] ) ? $result['error_message'] : '';
@@ -177,7 +177,7 @@ class WP_CFT_WordPress_Integration {
 		}
 
 		if ( ! empty( $_POST ) ) {
-			$result = WP_CFT_Turnstile::get_instance()->check();
+			$result = WP_CFT_Turnstile::get_instance()->check_cft_token_response();
 
 			$success = isset( $result['success'] ) ? boolval( $result['success'] ) : false;
 			$error_message = isset( $result['error_message'] ) ? $result['error_message'] : '';

@@ -67,7 +67,7 @@ class WP_CFT_ASP_Integration {
 		$token = isset( $_POST['wp_cft_token_response'] ) ? $_POST['wp_cft_token_response'] : '';
 
 		// Check Turnstile
-		$result = $this->turnstile->check( $token );
+		$result = $this->turnstile->check_cft_token_response( $token );
 
 		$success       = isset( $result['success'] ) ? boolval( $result['success'] ) : false;
 		$error_message = isset( $result['error_message'] ) ? $result['error_message'] : '';

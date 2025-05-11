@@ -6,6 +6,8 @@ class WP_CFT_Turnstile {
 
 	public WP_CFT_Config $settings;
 
+    public $settings_overrdies = array();
+
 	public static function get_instance() : self {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
@@ -43,10 +45,12 @@ class WP_CFT_Turnstile {
 
     public function get_implicit_widget( $callback = '', $form_name = '', $unique_id = '', $class = '' ){
 	    $site_key    = $this->settings->get_value( 'wp_cft_site_key' );
-	    $theme       = $this->settings->get_value( 'wp_cft_theme', 'auto' );
-	    $language    = 'auto';
-	    $appearance  = 'always';
-	    $widget_size = $this->settings->get_value( 'wp_cft_widget_size', 'normal' );
+
+        $widget_settings = $this->widget_settings();
+	    $theme       = isset($widget_settings['theme']) ? $widget_settings['theme'] : 'auto';
+	    $language    = isset($widget_settings['language']) ? $widget_settings['language'] : 'auto';
+	    $appearance  = isset($widget_settings['appearance']) ? $widget_settings['appearance'] : 'always';
+	    $widget_size = isset($widget_settings['widget_size']) ? $widget_settings['widget_size'] : 'normal';
 
         ob_start();
 	    ?>
@@ -120,7 +124,7 @@ class WP_CFT_Turnstile {
 	/**
 	 * Checks Turnstile Captcha POST is Valid
 	 */
-	public function check( $cft_response_token = "" ) {
+	public function check_cft_token_response( $cft_response_token = "" ) {
 		$results = array();
 
 		// Check if POST data is empty
@@ -165,4 +169,33 @@ class WP_CFT_Turnstile {
 
 		return false;
 	}
+
+    public function widget_settings(){
+        $settings = array(
+            'theme'       => $this->settings->get_value( 'wp_cft_theme', 'auto' ),
+            'language'    => 'auto',
+            'appearance'  => 'always',
+            'widget_size' => $this->settings->get_value( 'wp_cft_widget_size', 'normal' )
+        );
+        $overrides = $this->settings_overrdies;
+
+        $out = array();
+	    foreach ( $settings as $name => $default ) {
+		    if ( array_key_exists( $name, $overrides ) ) {
+			    $out[ $name ] = $overrides[ $name ];
+		    } else {
+			    $out[ $name ] = $default;
+		    }
+	    }
+
+        return $out;
+    }
+
+    public function add_settings_override($name, $value){
+        $this->settings_overrdies[$name] = $value;
+    }
+
+    public function clear_settings_overrides() {
+	    $this->settings_overrdies = array();
+    }
 }

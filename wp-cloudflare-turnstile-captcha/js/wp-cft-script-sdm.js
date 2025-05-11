@@ -26,7 +26,7 @@ function wp_cft_get_dl_form(referenceEL){
     let targetForm = null;
 
     while (currentEl){
-        let dl_form = currentEl.querySelector('form.sdm-download-form');
+        let dl_form = currentEl.querySelector('form.sdm-download-form, .sdm_sf_tpl_container form');
         if (dl_form){
             targetForm = dl_form;
             break;
