@@ -19,6 +19,11 @@
     color: #cc0000;
 }
 
+.wp-cft-semi-small-widget-size {
+    transform: scale(0.9);
+    -webkit-transform: scale(0.9);
+}
+
 .wp-cft-small-widget-size {
     transform: scale(0.73);
     -webkit-transform: scale(0.73);

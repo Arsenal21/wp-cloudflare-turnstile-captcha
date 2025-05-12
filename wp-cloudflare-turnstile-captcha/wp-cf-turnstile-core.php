@@ -10,8 +10,8 @@ class WP_CFT_Main {
 	public $debug_logger;
 
 	public function __construct() {
-		$this->load_configs();
 		$this->define_constants();
+		$this->load_configs();
 		$this->includes();
 		$this->initialize_and_run_classes();
 
@@ -58,7 +58,7 @@ class WP_CFT_Main {
 	}
 
 	public function load_configs() {
-		include_once( 'classes/wp-cf-turnstile-config.php' );
+		include_once( WP_CFT_PATH . '/classes/wp-cf-turnstile-config.php' );
 		$this->plugin_configs = WP_CFT_Config::get_instance();
 	}
 
@@ -72,7 +72,7 @@ class WP_CFT_Main {
 		include_once( WP_CFT_PATH . '/classes/wp-cf-turnstile-debug-logger.php' );
 		if ( is_admin() ) {
 			//Load admin side only files
-			include_once( 'admin/wp-cf-turnstile-admin-init.php' );
+			include_once( WP_CFT_PATH . '/admin/wp-cf-turnstile-admin-init.php' );
 		} else {
 			//Load front end side only files
 		}

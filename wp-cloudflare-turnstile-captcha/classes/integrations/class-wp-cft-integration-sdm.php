@@ -13,8 +13,8 @@ class WP_CFT_SDM_Integration {
 
 		$wp_cft_enable_on_sdm_download = $this->settings->get_value( 'wp_cft_enable_on_sdm_download' );
 		if ( $wp_cft_enable_on_sdm_download ) {
-			add_filter( 'sdm_before_download_button', array( $this, 'render_sdm_download_form_cft' ), 30, 3 );
-			add_action( 'sdm_process_download_request', array( $this, 'check_download_request' ) );
+			add_filter( 'sdm_before_download_button', array( $this, 'render_sdm_download_form_cft' ), 10, 3 );
+			add_action( 'sdm_download_via_direct_post', array( $this, 'check_download_request' ) );
 
             // For hidden downloads.
             add_action( 'sdm_hd_process_download_request', array( $this, 'check_download_request' ) );
@@ -22,7 +22,7 @@ class WP_CFT_SDM_Integration {
 
 		$wp_cft_enable_on_sdm_sf = $this->settings->get_value( 'wp_cft_enable_on_sdm_sf' );
 		if ( $wp_cft_enable_on_sdm_sf ) {
-			add_filter( 'sdm_sf_before_download_button', array( $this, 'render_sdm_sf_download_form_cft' ), 30, 3 );
+			add_filter( 'sdm_sf_before_download_button', array( $this, 'render_sdm_sf_download_form_cft' ), 10, 3 );
 			add_action( 'sdm_sf_download_form_submitted', array( $this, 'check_download_request' ) );
 		}
 	}
@@ -85,7 +85,7 @@ class WP_CFT_SDM_Integration {
                     // Append cft token as am input field, so that it can be captured after form submission.
 
                     // First check if the token input field already exists or not.
-                    const existing_cft_token_field = dl_form.querySelector('form[name="cf-turnstile-response"]');
+                    const existing_cft_token_field = dl_form.querySelector('input[name="cf-turnstile-response"]');
                     if (existing_cft_token_field){
                         // Input field already exists, update token value.
                         existing_cft_token_field.value = token;

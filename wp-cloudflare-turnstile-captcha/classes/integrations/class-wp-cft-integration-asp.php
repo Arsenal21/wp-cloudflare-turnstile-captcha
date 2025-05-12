@@ -56,9 +56,7 @@ class WP_CFT_ASP_Integration {
 	}
 
 	public function render_asp_checkout_form_cft($out, $data) {
-		echo '<div class="wp-cft-place-widget-center">';
-		echo $this->turnstile->get_implicit_widget( 'wp_cft_asp_checkout_form_callback', 'asp-checkout', wp_rand() );
-		echo '</div>';
+		echo $this->turnstile->get_implicit_widget( 'wp_cft_asp_checkout_form_callback', 'asp-checkout', wp_rand(), 'wp-cft-place-widget-center' );
 
 		return $out;
 	}

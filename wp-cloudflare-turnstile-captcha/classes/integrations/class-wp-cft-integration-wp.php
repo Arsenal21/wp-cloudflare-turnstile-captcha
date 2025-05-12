@@ -37,15 +37,15 @@ class WP_CFT_WordPress_Integration {
 	}
 
 	public function render_wp_login_form_cft() {
-		$this->turnstile->render_implicit( 'wp_cft_callback', 'wordpress-login', wp_rand(), 'wp-cft-widget-ml-n15 wp-cft-widget-mb-12' );
+		$this->turnstile->render_implicit( 'wp_cft_callback', 'wordpress-login', wp_rand(), 'wp-cft-widget-ml-n15 wp-cft-widget-mb-12 wp-cft-semi-small-widget-size' );
 	}
 
 	public function render_wp_register_form_cft() {
-		$this->turnstile->render_implicit('wp_cft_callback', 'wordpress-register', wp_rand(), 'wp-cft-widget-ml-n15' );
+		$this->turnstile->render_implicit('wp_cft_callback', 'wordpress-register', wp_rand(), 'wp-cft-widget-ml-n15 wp-cft-semi-small-widget-size' );
 	}
 
 	public function render_wp_pass_reset_form_cft() {
-		$this->turnstile->render_implicit('wp_cft_callback', 'wordpress-reset', wp_rand(), 'wp-cft-widget-ml-n15 wp-cft-widget-mb-12' );
+		$this->turnstile->render_implicit('wp_cft_callback', 'wordpress-reset', wp_rand(), 'wp-cft-widget-ml-n15 wp-cft-widget-mb-12 wp-cft-semi-small-widget-size' );
 	}
 
 	public function render_comment_form_cft( $submit_button, $args ) {
@@ -59,7 +59,8 @@ class WP_CFT_WordPress_Integration {
 		$submit_before .= $this->turnstile->get_implicit_widget( 'wp_cft_callback', 'wordpress-comment', 'c-' .$unique_id );
 		$submit_before .= '<br>';
 
-		// $submit_after .= $this->turnstile->force_re_render( "-c-" . $unique_id );// TODO: This needs to be checked it its necessary.
+        // TODO: This might be needed later.
+		// $submit_after .= $this->turnstile->force_re_render( "-c-" . $unique_id );
 
 		// Script to render turnstile when clicking reply
 		ob_start();
