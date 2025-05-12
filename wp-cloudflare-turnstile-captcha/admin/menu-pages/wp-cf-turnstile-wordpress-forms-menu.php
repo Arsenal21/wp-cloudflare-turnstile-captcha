@@ -103,7 +103,7 @@ class WP_CFT_WordPress_Forms_Menu extends WP_CFT_Admin_Menu {
                         <input type="checkbox"
                                name="wp_cft_enable_on_wp_register" <?php echo esc_attr( $wp_cft_enable_on_wp_register ); ?>
                                value="1">
-                        <p class="description"><?php _e( 'Enable turnstile captcha on the registration form of wordpress.', 'wp-cf-turnstile' ); ?></p>
+                        <p class="description"><?php _e( 'Enable turnstile captcha on the registration form of wordpress. The token validation will be skipped if the user already logged in and its an admin.', 'wp-cf-turnstile' ); ?></p>
                     </td>
                 </tr>
                 <tr>

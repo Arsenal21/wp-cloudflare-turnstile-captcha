@@ -40,7 +40,7 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
 		//Get the current tab
 		$tab = $this->get_current_tab();
 
-		//Render the menu tabe before poststuff (for the menu tabs to be correctly rendered withou CSS issue)
+		//Render the menu tab before poststuff (for the menu tabs to be correctly rendered without CSS issue)
 		$this->render_menu_tabs();
 
 		//Post stuff and body
@@ -155,10 +155,10 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
                     <td>
                         <select name="wp_cft_widget_size">
                             <option value="normal" <?php echo $wp_cft_widget_size == 'normal' ? 'selected' : ''; ?>><?php _e( 'Normal (300px)', 'wp-cf-turnstile' ) ?></option>
-                            <option value="flexible" <?php echo $wp_cft_widget_size == 'flexible' ? 'selected' : ''; ?>><?php _e( 'Flexible (100%)', 'wp-cf-turnstile' ) ?></option>
+                            <option value="flexible" <?php echo $wp_cft_widget_size == 'flexible' ? 'selected' : ''; ?>><?php _e( 'Flexible (min 300px, max 100%)', 'wp-cf-turnstile' ) ?></option>
                             <option value="compact" <?php echo $wp_cft_widget_size == 'compact' ? 'selected' : ''; ?>><?php _e( 'Compact (150px)', 'wp-cf-turnstile' ) ?></option>
                         </select>
-                        <p class="description"><?php _e( 'The widget display size of turnstile checkbox.', 'wp-cf-turnstile' ); ?></p>
+                        <p class="description"><?php _e( 'The widget display size of turnstile checkbox. NOTE: Some templates may override this settings for proper visibility.', 'wp-cf-turnstile' ); ?></p>
                     </td>
                 </tr>
                 <tr>

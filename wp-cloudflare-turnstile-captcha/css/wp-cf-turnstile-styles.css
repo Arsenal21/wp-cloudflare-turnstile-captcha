@@ -2,6 +2,10 @@
     margin-left: -15px;
 }
 
+.wp-cft-widget-mt-12{
+    margin-top: 12px;
+}
+
 .wp-cft-widget-mb-12{
     margin-bottom: 12px;
 }
@@ -13,4 +17,14 @@
 
 .wp-cft-error-msg {
     color: #cc0000;
+}
+
+.wp-cft-semi-small-widget-size {
+    transform: scale(0.9);
+    -webkit-transform: scale(0.9);
+}
+
+.wp-cft-small-widget-size {
+    transform: scale(0.73);
+    -webkit-transform: scale(0.73);
 }

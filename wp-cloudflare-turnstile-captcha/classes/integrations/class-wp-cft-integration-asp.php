@@ -56,9 +56,7 @@ class WP_CFT_ASP_Integration {
 	}
 
 	public function render_asp_checkout_form_cft($out, $data) {
-		echo '<div class="wp-cft-place-widget-center">';
-		echo $this->turnstile->get_implicit_widget( 'wp_cft_asp_checkout_form_callback', 'asp-checkout', wp_rand() );
-		echo '</div>';
+		echo $this->turnstile->get_implicit_widget( 'wp_cft_asp_checkout_form_callback', 'asp-checkout', wp_rand(), 'wp-cft-place-widget-center' );
 
 		return $out;
 	}
@@ -67,7 +65,7 @@ class WP_CFT_ASP_Integration {
 		$token = isset( $_POST['wp_cft_token_response'] ) ? $_POST['wp_cft_token_response'] : '';
 
 		// Check Turnstile
-		$result = $this->turnstile->check( $token );
+		$result = $this->turnstile->check_cft_token_response( $token );
 
 		$success       = isset( $result['success'] ) ? boolval( $result['success'] ) : false;
 		$error_message = isset( $result['error_message'] ) ? $result['error_message'] : '';

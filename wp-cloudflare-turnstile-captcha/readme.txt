@@ -16,3 +16,4 @@ One line description here....
 = WIP =
 - WordPress forms integration added.
 - Accept stripe payment integration added.
+- Simple Download Monitor integration added including Squeeze form and Hidden download addon.
