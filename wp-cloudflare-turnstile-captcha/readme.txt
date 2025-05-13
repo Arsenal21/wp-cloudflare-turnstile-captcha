@@ -1,4 +1,4 @@
-=== WP Cloudflare Turnstile Captcha ===
+=== CF Turnstile for WP ===
 Contributors: []
 Tags: turnstile, captcha, cloudflare, security
 Donate link: []
@@ -10,6 +10,8 @@ License: GPLv3
 One line description here....
 
 == Description ==
+
+A free reCAPTCHA alternative for WordPress.
 
 == Installation ==
 
