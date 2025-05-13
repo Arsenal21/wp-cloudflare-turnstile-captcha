@@ -1,17 +1,20 @@
 === CF Turnstile for WP ===
-Contributors: []
+Contributors: mra13
 Tags: turnstile, captcha, cloudflare, security
-Donate link: []
-Requires at least: 3.2
-Tested up to: 6.7
-Stable tag: 1.0
+Donate link: https://www.tipsandtricks-hq.com/
+Requires at least: 6.5
+Tested up to: 6.8
+Stable tag: 1.0.0
 License: GPLv3
 
-One line description here....
+This plugin adds Cloudflare Turnstile to your WordPress site, providing an easy way to implement this CAPTCHA alternative for form validation and spam protection.
 
 == Description ==
 
 A free reCAPTCHA alternative for WordPress.
+
+Turnstile can generate multiple types of non-intrusive challenges to verify users are human, all without showing visitors a puzzle.
+
 
 == Installation ==
 
