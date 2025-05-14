@@ -33,7 +33,7 @@ class WP_CFT_Turnstile {
     }
 
 	public static function register_scripts() {
-		wp_register_script( 'cloudflare-turnstile-script', self::get_cft_cdn_url() );
+		wp_register_script( 'cloudflare-turnstile-script', self::get_cft_cdn_url(), array(), WP_CFT_VERSION, true );
 		wp_register_script( 'wp-cft-script', self::get_wp_cft_script_url() , array( 'cloudflare-turnstile-script' ), WP_CFT_VERSION, array(
 			'strategy'  => 'defer',
 			'in_footer' => true,
@@ -82,11 +82,18 @@ class WP_CFT_Turnstile {
 		wp_enqueue_script( 'wp-cft-script' );
 		wp_enqueue_style( 'wp-cf-turnstile-styles' );
 
-        do_action( "wp_cft_before_cft_widget", esc_attr( $unique_id ) );
+        $callback = sanitize_text_field($callback);
+        $form_name = sanitize_text_field($form_name);
+        $unique_id = sanitize_text_field($unique_id);
+        $class = sanitize_text_field($class);
 
-        echo $this->get_implicit_widget( $callback, $form_name, $unique_id, $class );
+        do_action( "wp_cft_before_cft_widget",  $unique_id );
 
-		do_action( "wp_cft_after_cft_widget", esc_attr( $unique_id ), $widget_id );
+        $widget = $this->get_implicit_widget( $callback, $form_name, $unique_id, $class );
+
+        echo wp_kses_post($widget);
+
+        do_action( "wp_cft_after_cft_widget", $unique_id, $widget_id );
 	}
 
 	public function force_re_render($unique_id = '')
@@ -129,7 +136,7 @@ class WP_CFT_Turnstile {
 
 		// Check if POST data is empty
 		if ( empty( $cft_response_token ) && isset( $_REQUEST['cf-turnstile-response'] ) ) {
-			$cft_response_token = sanitize_text_field( $_REQUEST['cf-turnstile-response'] );
+			$cft_response_token = sanitize_text_field( wp_unslash($_REQUEST['cf-turnstile-response']) );
 		}
 
 		// Get Turnstile Keys from Settings

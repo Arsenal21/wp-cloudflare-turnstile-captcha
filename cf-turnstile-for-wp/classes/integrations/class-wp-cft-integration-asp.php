@@ -56,13 +56,13 @@ class WP_CFT_ASP_Integration {
 	}
 
 	public function render_asp_checkout_form_cft($out, $data) {
-		echo $this->turnstile->get_implicit_widget( 'wp_cft_asp_checkout_form_callback', 'asp-checkout', wp_rand(), 'wp-cft-place-widget-center' );
+		echo wp_kses_post($this->turnstile->get_implicit_widget( 'wp_cft_asp_checkout_form_callback', 'asp-checkout', wp_rand(), 'wp-cft-place-widget-center' ));
 
 		return $out;
 	}
 
 	public function check_asp_checkout( ) {
-		$token = isset( $_POST['wp_cft_token_response'] ) ? $_POST['wp_cft_token_response'] : '';
+		$token = isset( $_POST['wp_cft_token_response'] ) ? sanitize_text_field(wp_unslash($_POST['wp_cft_token_response'])) : '';
 
 		// Check Turnstile
 		$result = $this->turnstile->check_cft_token_response( $token );
@@ -75,7 +75,7 @@ class WP_CFT_ASP_Integration {
 			$out            = array();
 			$out['success'] = false;
 
-			$error_msg = __( 'Cloudflare Turnstile error: ', 'wp-cf-turnstile' );
+			$error_msg = __( 'Cloudflare Turnstile error: ', 'cf-turnstile-for-wp' );
 			$error_msg .= WP_CFT_Utils::failed_message( $error_message );
 
 			$out['err'] = $error_msg;

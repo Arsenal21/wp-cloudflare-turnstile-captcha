@@ -12,7 +12,7 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
 
 	public function get_current_tab() {
 		//Get the current tab (if any), otherwise default to the first tab.
-		$tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'tab1';
+		$tab = isset( $_GET['tab'] ) ? sanitize_text_field(wp_unslash($_GET['tab'])) : 'tab1';
 
 		return $tab;
 	}
@@ -26,7 +26,7 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
 		echo '<h2 class="nav-tab-wrapper">';
 		foreach ( $this->menu_tabs as $tab_key => $tab_caption ) {
 			$active = $current_tab == $tab_key ? 'nav-tab-active' : '';
-			echo '<a class="nav-tab ' . $active . '" href="?page=' . $this->menu_page_slug . '&tab=' . $tab_key . '">' . $tab_caption . '</a>';
+			echo '<a class="nav-tab ' . esc_attr($active) . '" href="?page=' . esc_attr($this->menu_page_slug) . '&tab=' . esc_attr($tab_key) . '">' . esc_attr($tab_caption) . '</a>';
 		}
 		echo '</h2>';
 	}
@@ -36,7 +36,7 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
 	 */
 	public function render_settings_menu_page() {
 		echo '<div class="wrap">';
-		echo '<h1>' . __( 'Plugin Integrations settings', 'wp-cft-turnstile' ) . '</h1>';
+		echo '<h1>' . esc_attr__( 'Plugin Integrations settings', 'cf-turnstile-for-wp' ) . '</h1>';
 		//Get the current tab
 		$tab = $this->get_current_tab();
 
@@ -45,7 +45,9 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
 
 		//Post stuff and body
 		echo '<div id="poststuff"><div id="post-body">';
-		echo '<div class="wp-cft-grey-box">' . sprintf( __( 'See the documentation here: %s', 'wp-cft-turnstile' ), '<a href="#">' . __( 'Documentation', 'wp-cft-turnstile' ) . '</a>' ) . '</div>';
+
+        /* translators: documentation link */
+		echo '<div class="wp-cft-grey-box">' . sprintf( esc_html__( 'See the documentation here: %s', 'cf-turnstile-for-wp' ), '<a href="#">' . esc_attr__( 'Documentation', 'cf-turnstile-for-wp' ) . '</a>' ) . '</div>';
 
 		//Switch based on the current tab
 		$tab_keys = array_keys( $this->menu_tabs );
@@ -71,7 +73,7 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
 
 			$settings->save_config();
 
-			echo '<div class="notice notice-success"><p>' . __( 'Settings saved.', 'wp-cft-turnstile' ) . '</p></div>';
+			echo '<div class="notice notice-success"><p>' . esc_attr__( 'Settings saved.', 'cf-turnstile-for-wp' ) . '</p></div>';
 		}
 
 		$wp_cft_enable_on_asp_checkout = $settings->get_value( 'wp_cft_enable_on_asp_checkout' );
@@ -83,18 +85,18 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
             <table class="form-table">
                 <tr>
                     <th>
-                        <label><?php _e( 'Checkout Form', 'wp-cf-turnstile' ); ?></label>
+                        <label><?php esc_attr_e( 'Checkout Form', 'cf-turnstile-for-wp' ); ?></label>
                     </th>
                     <td>
                         <input type="checkbox"
                                name="wp_cft_enable_on_asp_checkout" <?php echo esc_attr( $wp_cft_enable_on_asp_checkout ); ?>
                                value="1">
-                        <p class="description"><?php _e( 'Enable turnstile captcha on the checkout form of stripe payments plugin.', 'wp-cf-turnstile' ); ?></p>
+                        <p class="description"><?php esc_attr_e( 'Enable turnstile captcha on the checkout form of stripe payments plugin.', 'cf-turnstile-for-wp' ); ?></p>
                     </td>
                 </tr>
             </table>
 			<?php wp_nonce_field( 'wp_cft_asp_settings_nonce' ) ?>
-			<?php submit_button( __( 'Save Changes' ), 'primary', 'wp_cft_asp_settings_submit' ) ?>
+			<?php submit_button( __( 'Save Changes', 'cf-turnstile-for-wp' ), 'primary', 'wp_cft_asp_settings_submit' ) ?>
         </form>
 		<?php
 		$output .= ob_get_clean();
@@ -111,7 +113,7 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
 
 			$settings->save_config();
 
-			echo '<div class="notice notice-success"><p>' . __( 'Settings saved.', 'wp-cft-turnstile' ) . '</p></div>';
+			echo '<div class="notice notice-success"><p>' . esc_attr__( 'Settings saved.', 'cf-turnstile-for-wp' ) . '</p></div>';
 		}
 
 		$wp_cft_enable_on_sdm_download = $settings->get_value( 'wp_cft_enable_on_sdm_download' );
@@ -124,30 +126,30 @@ class WP_CFT_Integrations_Menu extends WP_CFT_Admin_Menu {
             <table class="form-table">
                 <tr>
                     <th>
-                        <label><?php _e( 'Download Form', 'wp-cf-turnstile' ); ?></label>
+                        <label><?php esc_attr_e( 'Download Form', 'cf-turnstile-for-wp' ); ?></label>
                     </th>
                     <td>
                         <input type="checkbox"
                                name="wp_cft_enable_on_sdm_download" <?php echo esc_attr( $wp_cft_enable_on_sdm_download ); ?>
                                value="1">
-                        <p class="description"><?php _e( 'Enable turnstile captcha on the download forms of simple download monitor core plugin.', 'wp-cf-turnstile' ); ?></p>
+                        <p class="description"><?php esc_attr_e( 'Enable turnstile captcha on the download forms of simple download monitor core plugin.', 'cf-turnstile-for-wp' ); ?></p>
                     </td>
                 </tr>
 
                 <tr>
                     <th>
-                        <label><?php _e( 'Squeeze Form', 'wp-cf-turnstile' ); ?></label>
+                        <label><?php esc_attr_e( 'Squeeze Form', 'cf-turnstile-for-wp' ); ?></label>
                     </th>
                     <td>
                         <input type="checkbox"
                                name="wp_cft_enable_on_sdm_sf" <?php echo esc_attr( $wp_cft_enable_on_sdm_sf ); ?>
                                value="1">
-                        <p class="description"><?php _e( 'Enable turnstile captcha on the download forms of squeeze form addon.', 'wp-cf-turnstile' ); ?></p>
+                        <p class="description"><?php esc_attr_e( 'Enable turnstile captcha on the download forms of squeeze form addon.', 'cf-turnstile-for-wp' ); ?></p>
                     </td>
                 </tr>
             </table>
 			<?php wp_nonce_field( 'wp_cft_sdm_settings_nonce' ) ?>
-			<?php submit_button( __( 'Save Changes' ), 'primary', 'wp_cft_sdm_settings_submit' ) ?>
+			<?php submit_button( __( 'Save Changes', 'cf-turnstile-for-wp' ), 'primary', 'wp_cft_sdm_settings_submit' ) ?>
         </form>
 		<?php
 		$output .= ob_get_clean();

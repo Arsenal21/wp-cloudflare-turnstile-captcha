@@ -43,26 +43,50 @@ class WP_CFT_Debug_Logger
         }
         return "";
     }
-    
-    function append_to_file($content,$file_name)
-    {
-        if(empty($file_name))$file_name = $this->default_log_file;
-        $debug_log_file = $this->log_folder_path.'/'.$file_name;
-        $fp=fopen($debug_log_file,'a');
-        fwrite($fp, $content);
-        fclose($fp);
-    }
-    
-    function reset_log_file($file_name='')
-    {
-        if(empty($file_name))$file_name = $this->default_log_file;
-        $debug_log_file = $this->log_folder_path.'/'.$file_name;
-        $content = $this->get_debug_timestamp().$this->log_reset_marker;
-        $fp=fopen($debug_log_file,'w');
-        fwrite($fp, $content);
-        fclose($fp);
-    }
-    
+
+	function append_to_file($content, $file_name = '') {
+		global $wp_filesystem;
+
+		if (empty($file_name)) {
+			$file_name = $this->default_log_file;
+		}
+		$debug_log_file = trailingslashit($this->log_folder_path) . $file_name;
+
+		// Ensure WP_Filesystem is initialized
+		if (!($wp_filesystem instanceof WP_Filesystem)) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
+		$wp_filesystem->put_contents(
+			$debug_log_file,
+			$content,
+			FS_CHMOD_FILE | FS_METHOD_DIRECT | WP_FILESYSTEM_PUT_CONTENTS_ATOMIC
+		);
+	}
+
+	function reset_log_file($file_name = '') {
+		global $wp_filesystem;
+
+		if (empty($file_name)) {
+			$file_name = $this->default_log_file;
+		}
+		$debug_log_file = trailingslashit($this->log_folder_path) . $file_name;
+		$content = $this->get_debug_timestamp() . $this->log_reset_marker;
+
+		// Ensure WP_Filesystem is initialized
+		if (!($wp_filesystem instanceof WP_Filesystem)) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
+		$wp_filesystem->put_contents(
+			$debug_log_file,
+			$content,
+			FS_CHMOD_FILE | FS_METHOD_DIRECT | WP_FILESYSTEM_PUT_CONTENTS_ATOMIC
+		);
+	}
+
     function log_debug($message,$level=0,$section_break=false,$file_name='')
     {
         if (!$this->debug_enabled) return;

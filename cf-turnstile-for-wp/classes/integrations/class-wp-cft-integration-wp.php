@@ -91,7 +91,7 @@ class WP_CFT_WordPress_Integration {
 		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 			return $user;
 		} // Skip REST API
-		if ( isset( $_POST['edd_login_nonce'] ) && wp_verify_nonce( sanitize_text_field( $_POST['edd_login_nonce'] ), 'edd-login-nonce' ) ) {
+		if ( isset( $_POST['edd_login_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash($_POST['edd_login_nonce']) ), 'edd-login-nonce' ) ) {
 			return $user;
 		} // Skip EDD
 		if ( is_wp_error( $user ) && isset( $user->errors['empty_username'] ) && isset( $user->errors['empty_password'] ) ) {
@@ -124,10 +124,10 @@ class WP_CFT_WordPress_Integration {
 		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 			return $errors;
 		} // Skip REST API
-		if ( isset( $_POST['woocommerce-register-nonce'] ) && wp_verify_nonce( sanitize_text_field( $_POST['woocommerce-register-nonce'] ), 'woocommerce-register' ) ) {
+		if ( isset( $_POST['woocommerce-register-nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash($_POST['woocommerce-register-nonce']) ), 'woocommerce-register' ) ) {
 			return $errors;
 		} // Skip Woo
-		if ( isset( $_POST['edd_register_nonce'] ) && wp_verify_nonce( sanitize_text_field( $_POST['edd_register_nonce'] ), 'edd-register-nonce' ) ) {
+		if ( isset( $_POST['edd_register_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash($_POST['edd_register_nonce']) ), 'edd-register-nonce' ) ) {
 			return $errors;
 		} // Skip EDD
 
@@ -185,8 +185,8 @@ class WP_CFT_WordPress_Integration {
 
 			if ( empty($success) ) {
 				wp_die(
-					'<p><strong>' . __( 'ERROR:', 'wp-cf-turnstile' ) . '</strong> ' . WP_CFT_Utils::failed_message($error_message) . '</p>',
-					'wp-cf-turnstile',
+					'<p><strong>' . esc_attr__( 'ERROR:', 'cf-turnstile-for-wp' ) . '</strong> ' . esc_html(WP_CFT_Utils::failed_message($error_message)) . '</p>',
+					'cf-turnstile-for-wp',
 					array( 'response'  => 403 )
 				);
 			}

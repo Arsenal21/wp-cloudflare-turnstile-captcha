@@ -23,7 +23,7 @@ class WP_CFT_Admin_Init {
 
 	public function admin_menu_page_scripts() {
 		//make sure we are on the appropriate menu page
-		if ( isset( $_GET['page'] ) && strpos( $_GET['page'], WP_CFT_MENU_SLUG_PREFIX ) !== false ) {
+		if ( isset( $_GET['page'] ) && strpos( sanitize_text_field(wp_unslash($_GET['page'])), WP_CFT_MENU_SLUG_PREFIX ) !== false ) {
 			//wp_enqueue_script('postbox');
 			//wp_enqueue_script('dashboard');
 			//wp_enqueue_script('thickbox');
@@ -33,7 +33,7 @@ class WP_CFT_Admin_Init {
 
 	public function admin_menu_page_styles() {
 		//make sure we are on the appropriate menu page
-		if ( isset( $_GET['page'] ) && strpos( $_GET['page'], WP_CFT_MENU_SLUG_PREFIX ) !== false ) {
+		if ( isset( $_GET['page'] ) && strpos( sanitize_text_field(wp_unslash($_GET['page'])), WP_CFT_MENU_SLUG_PREFIX ) !== false ) {
 			wp_enqueue_style( 'wp-cft-admin-css', WP_CFT_URL . '/css/wp-cf-turnstile-admin-styles.css', array(), WP_CFT_VERSION );
 		}
 	}
@@ -41,10 +41,10 @@ class WP_CFT_Admin_Init {
 	public function create_admin_menus() {
 		$menu_icon_url = WP_CFT_URL . '/images/plugin-icon.png';
 
-		$this->main_menu_page = add_menu_page( __( 'Cloudflare Turnstile', 'wp-cf-turnstile' ), __( 'Cloudflare Turnstile', 'wp-cf-turnstile' ), WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_MAIN_MENU_SLUG, array( $this, 'handle_settings_menu_rendering' ), $menu_icon_url );
-		add_submenu_page( WP_CFT_MAIN_MENU_SLUG, __( 'Settings', 'wp-cf-turnstile' ), __( 'Settings', 'wp-cf-turnstile' ), WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_MAIN_MENU_SLUG, array( $this, 'handle_settings_menu_rendering') );
-		add_submenu_page( WP_CFT_MAIN_MENU_SLUG, __( 'WordPress Forms', 'wp-cf-turnstile' ), __( 'WordPress Forms', 'wp-cf-turnstile' ), WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_WORDPRESS_FORMS_MENU_SLUG, array( $this, 'handle_wordpress_menu_rendering' ) );
-		add_submenu_page( WP_CFT_MAIN_MENU_SLUG, __( 'Integrations', 'wp-cf-turnstile' ), __( 'Integrations', 'wp-cf-turnstile' ), WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_INTEGRATIONS_MENU_SLUG, array( $this, 'handle_integrations_menu_rendering') );
+		$this->main_menu_page = add_menu_page( __( 'Cloudflare Turnstile', 'cf-turnstile-for-wp' ), __( 'Cloudflare Turnstile', 'cf-turnstile-for-wp' ), WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_MAIN_MENU_SLUG, array( $this, 'handle_settings_menu_rendering' ), $menu_icon_url );
+		add_submenu_page( WP_CFT_MAIN_MENU_SLUG, __( 'Settings', 'cf-turnstile-for-wp' ), __( 'Settings', 'cf-turnstile-for-wp' ), WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_MAIN_MENU_SLUG, array( $this, 'handle_settings_menu_rendering') );
+		add_submenu_page( WP_CFT_MAIN_MENU_SLUG, __( 'WordPress Forms', 'cf-turnstile-for-wp' ), __( 'WordPress Forms', 'cf-turnstile-for-wp' ), WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_WORDPRESS_FORMS_MENU_SLUG, array( $this, 'handle_wordpress_menu_rendering' ) );
+		add_submenu_page( WP_CFT_MAIN_MENU_SLUG, __( 'Integrations', 'cf-turnstile-for-wp' ), __( 'Integrations', 'cf-turnstile-for-wp' ), WP_CFT_MANAGEMENT_PERMISSION, WP_CFT_INTEGRATIONS_MENU_SLUG, array( $this, 'handle_integrations_menu_rendering') );
 
 		do_action( 'wp_cft_admin_menu_created' );
 	}
