@@ -5,7 +5,7 @@ Donate link: https://www.tipsandtricks-hq.com/
 Requires at least: 6.5
 Tested up to: 6.8
 Stable tag: 1.0.0
-License: GPLv3
+License: GPL2
 
 This plugin adds Cloudflare Turnstile to your WordPress site, providing an easy way to implement this CAPTCHA alternative for form validation and spam protection.
 

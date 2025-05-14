@@ -30,7 +30,7 @@ class WP_CFT_Main {
 	public function define_constants() {
 		define( 'WP_CFT_URL', $this->plugin_url() );
 		define( 'WP_CFT_PATH', $this->plugin_path() );
-		define( 'WP_CFT_TEXT_DOMAIN', 'wp-cf-turnstile' );
+		define( 'WP_CFT_TEXT_DOMAIN', 'cf-turnstile-for-wp' );
 		define( 'WP_CFT_MANAGEMENT_PERMISSION', 'manage_options' );
 		define( 'WP_CFT_MENU_SLUG_PREFIX', 'wp-cft' );
 		define( 'WP_CFT_MAIN_MENU_SLUG', 'wp-cft' );

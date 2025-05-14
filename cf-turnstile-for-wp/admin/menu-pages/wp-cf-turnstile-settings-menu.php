@@ -12,7 +12,7 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
 
 	public function get_current_tab() {
 		//Get the current tab (if any), otherwise default to the first tab.
-		$tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'tab1';
+		$tab = isset( $_GET['tab'] ) ? sanitize_text_field(wp_unslash($_GET['tab'])) : 'tab1';
 
 		return $tab;
 	}
@@ -26,7 +26,7 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
 		echo '<h2 class="nav-tab-wrapper">';
 		foreach ( $this->menu_tabs as $tab_key => $tab_caption ) {
 			$active = $current_tab == $tab_key ? 'nav-tab-active' : '';
-			echo '<a class="nav-tab ' . $active . '" href="?page=' . $this->menu_page_slug . '&tab=' . $tab_key . '">' . $tab_caption . '</a>';
+			echo '<a class="nav-tab ' . esc_attr($active) . '" href="?page=' . esc_attr($this->menu_page_slug) . '&tab=' . esc_attr($tab_key) . '">' . esc_attr($tab_caption) . '</a>';
 		}
 		echo '</h2>';
 	}
@@ -36,7 +36,7 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
 	 */
 	public function render_settings_menu_page() {
 		echo '<div class="wrap">';
-		echo '<h1>' . __( 'WP Cloudflare Turnstile Settings', 'wp-cft-turnstile' ) . '</h1>';
+		echo '<h1>' . esc_attr__( 'WP Cloudflare Turnstile Settings', 'cf-turnstile-for-wp' ) . '</h1>';
 		//Get the current tab
 		$tab = $this->get_current_tab();
 
@@ -45,7 +45,9 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
 
 		//Post stuff and body
 		echo '<div id="poststuff"><div id="post-body">';
-		echo '<div class="wp-cft-grey-box">' . sprintf( __( 'See the documentation here: %s', 'wp-cft-turnstile' ), '<a href="#">' . __( 'Documentation', 'wp-cft-turnstile' ) . '</a>' ) . '</div>';
+
+		/* translators: documentation link */
+		echo '<div class="wp-cft-grey-box">' . sprintf( esc_attr__( 'See the documentation here: %s', 'cf-turnstile-for-wp' ), '<a href="#">' . esc_attr__( 'Documentation', 'cf-turnstile-for-wp' ) . '</a>' ) . '</div>';
 
 		//Switch based on the current tab
 		$tab_keys = array_keys( $this->menu_tabs );
@@ -67,12 +69,14 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
 
 		$settings = WP_CFT_Config::get_instance();
 		if ( isset( $_POST['wp_cft_api_settings_submit'] ) && check_admin_referer( 'wp_cft_api_settings_nonce' ) ) {
-			$settings->set_value( 'wp_cft_site_key', sanitize_text_field( $_POST['wp_cft_site_key'] ) );
-			$settings->set_value( 'wp_cft_secret_key', sanitize_text_field( $_POST['wp_cft_secret_key'] ) );
+            $wp_cft_site_key = isset($_POST['wp_cft_site_key']) ? sanitize_text_field( wp_unslash($_POST['wp_cft_site_key'])) : '';
+			$settings->set_value( 'wp_cft_site_key', $wp_cft_site_key );
+            $wp_cft_secret_key = isset($_POST['wp_cft_secret_key']) ? sanitize_text_field( wp_unslash($_POST['wp_cft_secret_key'])) : '';
+			$settings->set_value( 'wp_cft_secret_key', $wp_cft_secret_key );
 
 			$settings->save_config();
 
-			echo '<div class="notice notice-success"><p>' . __( 'Settings saved.', 'wp-cft-turnstile' ) . '</p></div>';
+			echo '<div class="notice notice-success"><p>' . esc_attr__( 'Settings saved.', 'cf-turnstile-for-wp' ) . '</p></div>';
 		}
 
 		$wp_cft_site_key   = $settings->get_value( 'wp_cft_site_key' );
@@ -85,27 +89,27 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
             <table class="form-table">
                 <tr>
                     <th>
-                        <label><?php _e( 'Site Key', 'wp-cf-turnstile' ); ?></label>
+                        <label><?php esc_attr_e( 'Site Key', 'cf-turnstile-for-wp' ); ?></label>
                     </th>
                     <td>
                         <input type="text" name="wp_cft_site_key" class="wp_cft-settings-text-field-cat-2"
                                value="<?php echo esc_attr( $wp_cft_site_key ); ?>" required>
-                        <p class="description"><?php _e( 'The site key for the Cloudflare Turnstile API.', 'wp-cf-turnstile' ); ?></p>
+                        <p class="description"><?php esc_attr_e( 'The site key for the Cloudflare Turnstile API.', 'cf-turnstile-for-wp' ); ?></p>
                     </td>
                 </tr>
                 <tr>
                     <th>
-                        <label><?php _e( 'Secret Key', 'wp-cf-turnstile' ); ?></label>
+                        <label><?php esc_attr_e( 'Secret Key', 'cf-turnstile-for-wp' ); ?></label>
                     </th>
                     <td>
                         <input type="text" name="wp_cft_secret_key" class="wp_cft-settings-text-field-cat-2"
                                value="<?php echo esc_attr( $wp_cft_secret_key ); ?>" required>
-                        <p class="description"><?php _e( 'The secret key for the Cloudflare Turnstile API.', 'wp-cf-turnstile' ); ?></p>
+                        <p class="description"><?php esc_attr_e( 'The secret key for the Cloudflare Turnstile API.', 'cf-turnstile-for-wp' ); ?></p>
                     </td>
                 </tr>
             </table>
 			<?php wp_nonce_field( 'wp_cft_api_settings_nonce' ) ?>
-			<?php submit_button( __( 'Save Changes' ), 'primary', 'wp_cft_api_settings_submit' ) ?>
+			<?php submit_button( __( 'Save Changes', 'cf-turnstile-for-wp' ), 'primary', 'wp_cft_api_settings_submit' ) ?>
         </form>
 		<?php
 		$output .= ob_get_clean();
@@ -117,13 +121,16 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
 
 		$settings = WP_CFT_Config::get_instance();
 		if ( isset( $_POST['wp_cft_display_settings_submit'] ) && check_admin_referer( 'wp_cft_display_settings_nonce' ) ) {
-			$settings->set_value( 'wp_cft_theme', sanitize_text_field( $_POST['wp_cft_theme'] ) );
-			$settings->set_value( 'wp_cft_widget_size', sanitize_text_field( $_POST['wp_cft_widget_size'] ) );
-			$settings->set_value( 'wp_cft_custom_error_msg', sanitize_text_field( $_POST['wp_cft_custom_error_msg'] ) );
+            $wp_cft_theme = isset($_POST['wp_cft_theme']) ? sanitize_text_field( wp_unslash($_POST['wp_cft_theme'])) : '';
+			$settings->set_value( 'wp_cft_theme', $wp_cft_theme );
+            $wp_cft_widget_size = isset($_POST['wp_cft_widget_size']) ? sanitize_text_field( wp_unslash($_POST['wp_cft_widget_size'])) : '';
+			$settings->set_value( 'wp_cft_widget_size', $wp_cft_widget_size );
+            $wp_cft_custom_error_msg = isset($_POST['wp_cft_custom_error_msg']) ? sanitize_text_field( wp_unslash($_POST['wp_cft_custom_error_msg'])) : '';
+			$settings->set_value( 'wp_cft_custom_error_msg', $wp_cft_custom_error_msg );
 
 			$settings->save_config();
 
-			echo '<div class="notice notice-success"><p>' . __( 'Settings saved.', 'wp-cft-turnstile' ) . '</p></div>';
+			echo '<div class="notice notice-success"><p>' . esc_attr__( 'Settings saved.', 'cf-turnstile-for-wp' ) . '</p></div>';
 		}
 
 		$wp_cft_theme            = $settings->get_value( 'wp_cft_theme' );
@@ -137,43 +144,43 @@ class WP_CFT_Settings_Menu extends WP_CFT_Admin_Menu {
             <table class="form-table">
                 <tr>
                     <th>
-                        <label><?php _e( 'Theme', 'wp-cf-turnstile' ); ?></label>
+                        <label><?php esc_attr_e( 'Theme', 'cf-turnstile-for-wp' ); ?></label>
                     </th>
                     <td>
                         <select name="wp_cft_theme">
-                            <option value="light" <?php echo $wp_cft_theme == 'light' ? 'selected' : ''; ?>><?php _e( 'Light', 'wp-cf-turnstile' ) ?></option>
-                            <option value="dark" <?php echo $wp_cft_theme == 'dark' ? 'selected' : ''; ?>><?php _e( 'Dark', 'wp-cf-turnstile' ) ?></option>
-                            <option value="auto" <?php echo $wp_cft_theme == 'auto' ? 'selected' : ''; ?>><?php _e( 'Auto', 'wp-cf-turnstile' ) ?></option>
+                            <option value="light" <?php echo $wp_cft_theme == 'light' ? 'selected' : ''; ?>><?php esc_attr_e( 'Light', 'cf-turnstile-for-wp' ) ?></option>
+                            <option value="dark" <?php echo $wp_cft_theme == 'dark' ? 'selected' : ''; ?>><?php esc_attr_e( 'Dark', 'cf-turnstile-for-wp' ) ?></option>
+                            <option value="auto" <?php echo $wp_cft_theme == 'auto' ? 'selected' : ''; ?>><?php esc_attr_e( 'Auto', 'cf-turnstile-for-wp' ) ?></option>
                         </select>
-                        <p class="description"><?php _e( 'The site key for the Cloudflare Turnstile API.', 'wp-cf-turnstile' ); ?></p>
+                        <p class="description"><?php esc_attr_e( 'The site key for the Cloudflare Turnstile API.', 'cf-turnstile-for-wp' ); ?></p>
                     </td>
                 </tr>
                 <tr>
                     <th>
-                        <label><?php _e( 'Widget Size', 'wp-cf-turnstile' ); ?></label>
+                        <label><?php esc_attr_e( 'Widget Size', 'cf-turnstile-for-wp' ); ?></label>
                     </th>
                     <td>
                         <select name="wp_cft_widget_size">
-                            <option value="normal" <?php echo $wp_cft_widget_size == 'normal' ? 'selected' : ''; ?>><?php _e( 'Normal (300px)', 'wp-cf-turnstile' ) ?></option>
-                            <option value="flexible" <?php echo $wp_cft_widget_size == 'flexible' ? 'selected' : ''; ?>><?php _e( 'Flexible (min 300px, max 100%)', 'wp-cf-turnstile' ) ?></option>
-                            <option value="compact" <?php echo $wp_cft_widget_size == 'compact' ? 'selected' : ''; ?>><?php _e( 'Compact (150px)', 'wp-cf-turnstile' ) ?></option>
+                            <option value="normal" <?php echo $wp_cft_widget_size == 'normal' ? 'selected' : ''; ?>><?php esc_attr_e( 'Normal (300px)', 'cf-turnstile-for-wp' ) ?></option>
+                            <option value="flexible" <?php echo $wp_cft_widget_size == 'flexible' ? 'selected' : ''; ?>><?php esc_attr_e( 'Flexible (min 300px, max 100%)', 'cf-turnstile-for-wp' ) ?></option>
+                            <option value="compact" <?php echo $wp_cft_widget_size == 'compact' ? 'selected' : ''; ?>><?php esc_attr_e( 'Compact (150px)', 'cf-turnstile-for-wp' ) ?></option>
                         </select>
-                        <p class="description"><?php _e( 'The widget display size of turnstile checkbox. NOTE: Some templates may override this settings for proper visibility.', 'wp-cf-turnstile' ); ?></p>
+                        <p class="description"><?php esc_attr_e( 'The widget display size of turnstile checkbox. NOTE: Some templates may override this settings for proper visibility.', 'cf-turnstile-for-wp' ); ?></p>
                     </td>
                 </tr>
                 <tr>
                     <th>
-                        <label><?php _e( 'Custom Error Message', 'wp-cf-turnstile' ); ?></label>
+                        <label><?php esc_attr_e( 'Custom Error Message', 'cf-turnstile-for-wp' ); ?></label>
                     </th>
                     <td>
                         <input type="text" name="wp_cft_custom_error_msg" class="wp_cft-settings-text-field-cat-2"
                                value="<?php echo esc_attr( $wp_cft_custom_error_msg ); ?>">
-                        <p class="description"><?php _e( 'Shown if the form is submitted without completing the Turnstile challenge. Leave blank to use the default.', 'wp-cf-turnstile' ); ?></p>
+                        <p class="description"><?php esc_attr_e( 'Shown if the form is submitted without completing the Turnstile challenge. Leave blank to use the default.', 'cf-turnstile-for-wp' ); ?></p>
                     </td>
                 </tr>
             </table>
 			<?php wp_nonce_field( 'wp_cft_display_settings_nonce' ) ?>
-			<?php submit_button( __( 'Save Changes' ), 'primary', 'wp_cft_display_settings_submit' ) ?>
+			<?php submit_button( __( 'Save Changes', 'cf-turnstile-for-wp' ), 'primary', 'wp_cft_display_settings_submit' ) ?>
         </form>
 		<?php
 		$output .= ob_get_clean();

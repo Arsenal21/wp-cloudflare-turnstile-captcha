@@ -133,10 +133,10 @@ class WP_CFT_SDM_Integration {
 
 		// Send error response if failed.
 		if ( empty($success) ) {
-			$error_msg = __( 'Cloudflare Turnstile error: ', 'wp-cf-turnstile' );
+			$error_msg = __( 'Cloudflare Turnstile error: ', 'cf-turnstile-for-wp' );
 			$error_msg .= WP_CFT_Utils::failed_message( $error_message );
 
-			wp_die($error_msg);
+			wp_die(esc_attr($error_msg));
 		}
 	}
 }

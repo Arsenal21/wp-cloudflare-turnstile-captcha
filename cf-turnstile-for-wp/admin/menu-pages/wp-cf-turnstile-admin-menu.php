@@ -8,18 +8,14 @@ abstract class WP_CFT_Admin_Menu
 {
     /**
      * Shows postbox for settings menu. Useful for showing a section of settings
-     *
-     * @param string $id css ID for postbox
-     * @param string $title title of the postbox section
-     * @param string $content the content of the postbox
      **/
     function postbox($id, $title, $content) 
     {
         ?>
-        <div id="<?php echo $id; ?>" class="postbox">
-            <h3 class="hndle"><label for="title"><?php echo $title; ?></label></h3>
+        <div id="<?php echo esc_attr($id); ?>" class="postbox">
+            <h3 class="hndle"><label for="title"><?php echo esc_attr($title); ?></label></h3>
             <div class="inside">
-                <?php echo $content; ?>
+                <?php echo $content?>
             </div>
         </div>
         <?php
