@@ -1,7 +1,7 @@
 === CF Turnstile for WP ===
 Contributors: mra13, Tips and Tricks HQ
 Tags: turnstile, captcha, cloudflare, spam-protection, security
-Donate link: https://www.tipsandtricks-hq.com/
+Donate link: https://www.tipsandtricks-hq.com/development-center
 Requires at least: 6.5
 Requires PHP: 8.0
 Tested up to: 6.8
