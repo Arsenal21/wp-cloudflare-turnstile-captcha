@@ -2,7 +2,7 @@
 /*
 Plugin Name: CF Turnstile for WP
 Version: 1.0.0
-Plugin URI: https://www.tipsandtricks-hq.com/
+Plugin URI: https://www.tipsandtricks-hq.com/cf-turnstile-for-wp-plugin
 Author: Tips and Tricks HQ, mra13
 Author URI: https://www.tipsandtricks-hq.com/
 Description: A lightweight plugin that adds Cloudflare Turnstile CAPTCHA to core WordPress forms and selected third‑party plugins to block spam and bot attacks.
